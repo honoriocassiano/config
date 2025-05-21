@@ -37,6 +37,7 @@
 
 (global-display-line-numbers-mode 1) ; Exibe as linhas
 (global-hl-line-mode 1)              ; Destaque na linha atual
+(global-auto-revert-mode 1)          ; Não pede confirmação para recarregar um arquivo do disco
 
 (use-package evil
 
@@ -75,7 +76,8 @@
 ; E no emacs
 (global-set-key (kbd "C-z") nil)
 
-(evil-ex-define-cmd "W" 'evil-write)      ; w ou W salvam
+(evil-ex-define-cmd "W" 'evil-write)     ; w ou W salvam
+(evil-ex-define-cmd "E" 'evil-edit)      ; e ou E salvam
 
 ; Trocar de janela com as setas do mouse
 (evil-define-key 'normal 'global (kbd "C-w <up>") 'evil-window-up)
