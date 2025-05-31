@@ -79,11 +79,27 @@
 (evil-ex-define-cmd "W" 'evil-write)     ; w ou W salvam
 (evil-ex-define-cmd "E" 'evil-edit)      ; e ou E salvam
 
+ ; Comandos personalizados do Evil
+(evil-ex-define-cmd "Goyo" 'writeroom-mode)        ; inicia o "writeroom"
+(evil-ex-define-cmd "SessionCd" 'kass/session-cd)  ; modo de "sessão"
+
 ; Trocar de janela com as setas do mouse
 (evil-define-key 'normal 'global (kbd "C-w <up>") 'evil-window-up)
 (evil-define-key 'normal 'global (kbd "C-w <down>") 'evil-window-down)
 (evil-define-key 'normal 'global (kbd "C-w <left>") 'evil-window-left)
 (evil-define-key 'normal 'global (kbd "C-w <right>") 'evil-window-right)
+
+; Funções personalizadas
+(defun kass/session-cd (folder)
+  (interactive "DPasta para a sessão: ")
+  (setq default-directory folder)
+  (setq-default kass/session-directory folder))
+
+(add-hook 'find-file-hook
+          (lambda ()
+            (if (boundp 'kass/session-directory)
+                (setq default-directory kass/session-directory)
+              nil)))
 
 (load-file custom-file) ; Carrega o arquivo com as variáveis customizadas
 
