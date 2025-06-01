@@ -72,6 +72,7 @@
 
 (global-set-key (kbd "<f9>") 'compile) ; Compila
 (global-set-key (kbd "<f6>") 'dired)   ; Abre um diretório
+(global-set-key (kbd "C-/") 'comment-line)
 
 ; C-z é esquisito então eu desabilito no modo evil
 (define-key evil-insert-state-map (kbd "C-z") nil)
