@@ -479,6 +479,7 @@ activated."
                                                     (funcall writeroom-added-width-left))
                                                    (t 0))
                                                   0))
+  (display-line-numbers-mode -1)
   (visual-line-fill-column-mode 1)
 
   ;; Run hooks on enabling `writeroom-mode'.
@@ -531,6 +532,8 @@ buffer in which it was active."
   ;; active before activating `writeroom-mode'.
   (if writeroom--saved-visual-fill-column
       (visual-fill-column-mode 1))
+
+  (display-line-numbers-mode 1)
 
   ;; Run hook on disabling `writeroom-mode'.
   (run-hook-with-args 'writeroom-local-effects -1)
