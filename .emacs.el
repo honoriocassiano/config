@@ -2,7 +2,10 @@
  gc-cons-threshold 402653184 ; Teoricamente aumenta a velocidade de inicialização
  gc-cons-percentage 0.6)
 
-(setq custom-file "~/.emacs.d/custom.el") ; Arquivo diferenciado para salvar as variáveis customizadas
+(setq kass/custom-script-dir "~/.emacs.d/lisp/")
+(setq kass/emacs-custom-file "custom.el")
+
+(setq custom-file (concat kass/custom-script-dir kass/emacs-custom-file)) ; Arquivo diferenciado para salvar as variáveis customizadas
 
 (ido-mode 1)         ; Autocomplete
 (ido-everywhere 1)   ; Autocomplete (de novo)
@@ -60,7 +63,10 @@
 
 (evil-mode 1)
 
-(set-frame-font "-UKWN-Iosevka Custom-regular-normal-expanded-*-15-*-*-*-m-0-iso10646-1") ; Modo horroroso de especificar a fonte
+;; Linux
+;; (set-frame-font "-UKWN-Iosevka Custom-regular-normal-expanded-*-15-*-*-*-m-0-iso10646-1") ; Modo horroroso de especificar a fonte
+;; Windows
+(set-frame-font "-outline-Fira Mono-regular-normal-normal-mono-14-*-*-*-c-*-iso10646-1") ; Modo horroroso de especificar a fonte
 
 (setq split-width-threshold nil) ; Não lembro
 
@@ -77,11 +83,14 @@
 (global-set-key (kbd "C-z") nil)
 
 (evil-ex-define-cmd "W" 'evil-write)     ; w ou W salvam
-(evil-ex-define-cmd "E" 'evil-edit)      ; e ou E salvam
+(evil-ex-define-cmd "E" 'evil-edit)      ; e ou E editam
 
- ; Comandos personalizados do Evil
+; Comandos personalizados do Evil
 (evil-ex-define-cmd "Goyo" 'writeroom-mode)        ; inicia o "writeroom"
 (evil-ex-define-cmd "SessionCd" 'kass/session-cd)  ; modo de "sessão"
+
+(evil-define-minor-mode-key 'normal 'writeroom-mode (kbd "<up>") 'evil-previous-visual-line)
+(evil-define-minor-mode-key 'normal 'writeroom-mode (kbd "<down>") 'evil-next-visual-line)
 
 ; Trocar de janela com as setas do mouse
 (evil-define-key 'normal 'global (kbd "C-w <up>") 'evil-window-up)
@@ -93,15 +102,28 @@
 (defun kass/session-cd (folder)
   (interactive "DPasta para a sessão: ")
   (setq default-directory folder)
-  (setq-default kass/session-directory folder))
+  (setq-default kass/session-dir folder))
+
+(defun kass/session-dir-or-default ()
+  (if (boundp 'kass/session-dir)
+      kass/session-dir
+    default-directory))
 
 (add-hook 'find-file-hook
           (lambda ()
-            (if (boundp 'kass/session-directory)
-                (setq default-directory kass/session-directory)
-              nil)))
+            (setq default-directory (kass/session-dir-or-default))))
 
-(load-file custom-file) ; Carrega o arquivo com as variáveis customizadas
+(defun kass/load-custom-file (name)
+  (load-file (concat kass/custom-script-dir name)))
+
+(kass/load-custom-file kass/emacs-custom-file) ; Carrega o arquivo com as variáveis customizadas pelo Emacs
+(kass/load-custom-file "writeroom-mode.el")    ; Modo writeroom para escrita
+(kass/load-custom-file "ifind-mode.el")        ; Encontra arquivos pelo nome
+
+(defun ifind ()
+  (interactive)
+  (setq default-directory (kass/session-dir-or-default))
+  (ifind-mode))
 
 (setq
  gc-cons-threshold 16777216 ; Oposto das primeiras linhas
