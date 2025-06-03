@@ -16,6 +16,7 @@
 (blink-cursor-mode -1) ; Cursos para de piscar
 (tooltip-mode -1)      ; Não lembro
 (recentf-mode 1)       ; Não sei
+(savehist-mode 1)      ; Aparentemente salva o histórico, mas não parece funcionar
 
 (setq-default
  indent-tabs-mode nil) ; Alguma coisa relativa a tabs vs espaços
@@ -98,6 +99,31 @@
 (evil-define-key 'normal 'global (kbd "C-w <down>") 'evil-window-down)
 (evil-define-key 'normal 'global (kbd "C-w <left>") 'evil-window-left)
 (evil-define-key 'normal 'global (kbd "C-w <right>") 'evil-window-right)
+
+; Shift para mantém a seleção visual
+(evil-define-key 'visual 'global (kbd "<") '(lambda ()
+                                              (interactive)
+                                              (evil-shift-left (region-beginning) (region-end))
+                                              (evil-normal-state)
+                                              (evil-visual-restore)))
+
+(evil-define-key 'visual 'global (kbd ">") '(lambda ()
+                                              (interactive)
+                                              (evil-shift-right (region-beginning) (region-end))
+                                              (evil-normal-state)
+                                              (evil-visual-restore)))
+
+; Movimentação em com hjkl no modo de inserção
+(evil-define-key 'insert 'global (kbd "M-k") 'evil-previous-line)
+(evil-define-key 'insert 'global (kbd "M-j") 'evil-next-line)
+(evil-define-key 'insert 'global (kbd "M-l") 'evil-forward-char)
+(evil-define-key 'insert 'global (kbd "M-h") 'evil-backward-char)
+
+; Para manter a consistência com a parte acima
+(evil-define-key 'insert 'global (kbd "M-<up>")    'evil-previous-line)
+(evil-define-key 'insert 'global (kbd "M-<down>")  'evil-next-line)
+(evil-define-key 'insert 'global (kbd "M-<right>") 'evil-forward-char)
+(evil-define-key 'insert 'global (kbd "M-<left>")  'evil-backward-char)
 
 ; Funções personalizadas
 (defun kass/session-cd (folder)
