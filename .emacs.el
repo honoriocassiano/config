@@ -34,7 +34,7 @@
  make-backup-files nil         ;; Não salva arquivos de backup
  scroll-step 1                 ;; Scroll do mouse funcional
  display-line-numbers-width 4  ;; Quantidade de dígitos reservados para os números das linhas
- split-height-threshold 20     ;; Tamanho máximo para uma nova "janela"
+ split-height-threshold 15     ;; Tamanho máximo para uma nova "janela"
  compilation-window-height 15) ;; Tamanho da "janela" de compilação
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximiza a janela após a inicialização
