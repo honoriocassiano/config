@@ -64,10 +64,8 @@
 
 (evil-mode 1)
 
-;; Linux
-;; (set-frame-font "-UKWN-Iosevka Custom-regular-normal-expanded-*-15-*-*-*-m-0-iso10646-1") ;; Modo horroroso de especificar a fonte
-;; Windows
-(set-frame-font "-outline-Fira Mono-regular-normal-normal-mono-14-*-*-*-c-*-iso10646-1") ;; Modo horroroso de especificar a fonte
+;; TODO Dependendo do tema a espessura da fonte deveria ser diferente, mas especificação não leva isso em consideração
+(set-frame-font "Iosevka Custom-12" t t)
 
 (setq split-width-threshold nil) ;; Não lembro
 
