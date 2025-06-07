@@ -63,9 +63,12 @@
  (evil-set-initial-state 'epa-key-list-mode 'motion))
 
 (evil-mode 1)
+(modify-syntax-entry ?_ "w")
+(add-hook 'c-mode-common-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
 
 ;; TODO Dependendo do tema a espessura da fonte deveria ser diferente, mas especificação não leva isso em consideração
-(set-frame-font "Iosevka Custom-12" t t)
+(set-frame-font "Iosevka Custom Extended-12" t t)
 
 (setq split-width-threshold nil) ;; Não lembro
 
