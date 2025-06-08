@@ -67,6 +67,9 @@
 (add-hook 'c-mode-common-hook
           (lambda () (modify-syntax-entry ?_ "w")))
 
+(add-hook 'html-mode-hook
+          (lambda () (setq tab-width 2)))
+
 ;; TODO Dependendo do tema a espessura da fonte deveria ser diferente, mas especificação não leva isso em consideração
 (set-frame-font "Iosevka Custom Extended-12" t t)
 
