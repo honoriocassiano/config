@@ -36,9 +36,6 @@
 ;; adding characters. Use the up/down arrows to navigate and press RET to visit
 ;; the file under the cursor.  Any other key will abort the search.
 
-(defvar ifind-dir default-directory
-  "Directory where to search files on.")
-
 ;; TODO Encontrar um comando que funcione no Windows
 (defvar ifind-command "find %s \\( %s \\) -prune -o -type f -iname \"*%s*\" -print"
   "Shell command that performs the file search.
@@ -139,6 +136,6 @@ It's a string with three %s that get replaced by:
   (let ((message-log-max nil))
     (if (>= (length ifind-string) ifind-min-length)
         (shell-command
-         (format ifind-command ifind-dir ifind-excluded-dirs ifind-string)
+         (format ifind-command default-directory ifind-excluded-dirs ifind-string)
          "*ifind*"))
     (message "Find files matching: %s" ifind-string)))
