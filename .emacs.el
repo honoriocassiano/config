@@ -71,7 +71,7 @@
           (lambda () (setq tab-width 2)))
 
 ;; TODO Dependendo do tema a espessura da fonte deveria ser diferente, mas especificação não leva isso em consideração
-(set-frame-font "Iosevka Custom Extended-12" t t)
+(set-frame-font "Iosevka Custom Semi-Extended-12" t t)
 
 (setq split-width-threshold nil) ;; Não lembro
 
