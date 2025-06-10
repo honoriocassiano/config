@@ -129,6 +129,24 @@
 (evil-define-key 'insert 'global (kbd "M-<right>") 'evil-forward-char)
 (evil-define-key 'insert 'global (kbd "M-<left>")  'evil-backward-char)
 
+;; Colar no modo visual não limpa altera o valor copiado
+(evil-define-key 'visual 'global (kbd "p") '(lambda ()
+                                              (interactive)
+                                              (evil-paste-after 1)
+                                              (evil-visual-restore)
+                                              (evil-yank-line (region-beginning) (region-end))
+                                              (evil-normal-state)))
+
+(evil-set-leader 'normal (kbd "<SPC>"))
+(evil-set-leader 'motion (kbd "<SPC>"))
+(evil-set-leader 'visual (kbd "<SPC>"))
+
+(evil-define-key 'normal 'global (kbd "<leader>s") '(lambda ()
+                                                      (interactive)
+                                                      (split-window-right)
+                                                      (windmove-right)
+                                                      (find-file "~/.emacs.el")))
+
 ;; Funções personalizadas
 (defun kass/session-cd (folder)
   (interactive "DPasta para a sessão: ")
