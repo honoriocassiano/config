@@ -153,7 +153,8 @@
 
 ;; Funções personalizadas
 (defun kass/session-cd (folder)
-  (interactive "DPasta para a sessão: ")
+  (interactive (list
+                (read-directory-name "Pasta para a sessão: ")))
   (setq default-directory folder)
   (setq-default kass/session-dir folder))
 
@@ -221,6 +222,20 @@
 (evil-define-key 'visual 'global (kbd "C-d") '(lambda ()
                                                 (interactive)
                                                 (kass/duplicate-and-comment-region (region-beginning) (region-end))))
+
+(evil-define-key 'normal 'global (kbd "C-p") '(lambda ()
+                                                (interactive)
+                                                (ifind)))
+
+(evil-define-key 'visual 'global (kbd "C-p") '(lambda ()
+                                                (interactive)
+                                                (evil-exit-visual-state)
+                                                (ifind)))
+
+(evil-define-key 'insert 'global (kbd "C-p") '(lambda ()
+                                                (interactive)
+                                                (evil-normal-state)
+                                                (ifind)))
 
 (add-hook 'focus-out-hook '(lambda ()
                              (interactive)
