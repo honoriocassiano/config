@@ -77,7 +77,6 @@
 
 (global-set-key (kbd "<f9>") 'compile) ;; Compila
 (global-set-key (kbd "<f6>") 'dired)   ;; Abre um diretório
-(global-set-key (kbd "C-/") 'comment-line)
 
 ;; C-z é esquisito então eu desabilito no modo evil
 (define-key evil-insert-state-map (kbd "C-z") nil)
@@ -103,6 +102,10 @@
 (evil-define-key 'normal 'global (kbd "C-w <down>") 'evil-window-down)
 (evil-define-key 'normal 'global (kbd "C-w <left>") 'evil-window-left)
 (evil-define-key 'normal 'global (kbd "C-w <right>") 'evil-window-right)
+
+;; Comentários
+(evil-define-key 'normal 'global (kbd "C-/") 'comment-line)
+(evil-define-key 'visual 'global (kbd "C-/") 'comment-or-uncomment-region)
 
 ;; Shift para mantém a seleção visual
 (evil-define-key 'visual 'global (kbd "<") '(lambda ()
@@ -141,6 +144,7 @@
 (evil-set-leader 'motion (kbd "<SPC>"))
 (evil-set-leader 'visual (kbd "<SPC>"))
 
+;; Abrir o .emacs.el
 (evil-define-key 'normal 'global (kbd "<leader>s") '(lambda ()
                                                       (interactive)
                                                       (split-window-right)
@@ -173,6 +177,50 @@
   (interactive)
   (setq default-directory (kass/session-dir-or-default))
   (ifind-mode))
+
+(defun kass/duplicate-and-comment (beg end)
+  (interactive)
+  (evil-yank-line beg end)
+  (evil-set-marker ?a)
+  (evil-normal-state)
+  (evil-end-of-line)
+  (evil-with-single-undo
+    (evil-paste-after 1)
+    (evil-goto-mark ?\[)
+    (evil-visual-char)
+    (evil-goto-mark ?\])
+    (comment-or-uncomment-region (region-beginning) (region-end))
+    (evil-exit-visual-state)
+    )
+  (evil-goto-mark ?a))
+
+;; TODO Ao desfazer a ação, o cursor não volta à posição original
+;; TODO Não parece funcionar em todos os major modes
+(defun kass/duplicate-and-comment-region (beg end)
+  (interactive)
+  (evil-exit-visual-state)
+  (evil-set-marker ?r)
+  (evil-yank beg end)
+  (goto-char end)
+  (evil-beginning-of-line)
+  (evil-with-single-undo
+    (evil-paste-before 1)
+    (evil-goto-mark ?\[)
+    (evil-visual-line)
+    (evil-goto-mark ?\])
+    (comment-or-uncomment-region (region-beginning) (region-end))
+    (evil-exit-visual-state)
+    )
+  (evil-goto-mark ?r))
+
+(evil-define-key 'normal 'global (kbd "C-d") '(lambda ()
+                                                (interactive)
+                                                (evil-visual-state)
+                                                (kass/duplicate-and-comment (region-beginning) (region-end))))
+
+(evil-define-key 'visual 'global (kbd "C-d") '(lambda ()
+                                                (interactive)
+                                                (kass/duplicate-and-comment-region (region-beginning) (region-end))))
 
 (setq
  gc-cons-threshold 16777216 ;; Oposto das primeiras linhas
