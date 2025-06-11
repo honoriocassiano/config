@@ -37,12 +37,13 @@
 ;; the file under the cursor.  Any other key will abort the search.
 
 ;; TODO Encontrar um comando que funcione no Windows
-(defvar ifind-command "find %s \\( %s \\) -prune -o -type f -iname \"*%s*\" -print"
+(defvar ifind-command "find %s \\( %s \\) -prune -o -type f -iname \"*%s*\" -exec realpath --relative-to \"%s\" \{\} \\;"
   "Shell command that performs the file search.
 It's a string with three %s that get replaced by:
  1. The root directory where to search files on
  2. The directories to exclude; built using vc-directory-exclusion-list
- 3. The string to search for in the filenames")
+ 3. The string to search for in the filenames
+ 4. The relative directory to use on print (same as root directory)")
 
 (defvar ifind-min-length 2
   "Minimum length of the search string to trigger the shell command.")
@@ -129,6 +130,9 @@ It's a string with three %s that get replaced by:
   (force-mode-line-update)
   (kill-buffer "*ifind*"))
 
+(defun ifind-format-command (dir excluded-dirs str)
+  (format ifind-command dir excluded-dirs str dir))
+
 (defun ifind-update ()
   "Display the current search string and search for files."
   (switch-to-buffer "*ifind*")
@@ -136,6 +140,6 @@ It's a string with three %s that get replaced by:
   (let ((message-log-max nil))
     (if (>= (length ifind-string) ifind-min-length)
         (shell-command
-         (format ifind-command default-directory ifind-excluded-dirs ifind-string)
+         (ifind-format-command default-directory ifind-excluded-dirs ifind-string)
          "*ifind*"))
     (message "Find files matching: %s" ifind-string)))
