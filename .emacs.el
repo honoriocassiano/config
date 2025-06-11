@@ -222,6 +222,10 @@
                                                 (interactive)
                                                 (kass/duplicate-and-comment-region (region-beginning) (region-end))))
 
+(add-hook 'focus-out-hook '(lambda ()
+                             (interactive)
+                             (save-some-buffers t)))
+
 (setq
  gc-cons-threshold 16777216 ;; Oposto das primeiras linhas
  gc-cons-percentage 0.1)
