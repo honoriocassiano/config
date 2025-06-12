@@ -37,8 +37,6 @@
  split-height-threshold 15     ;; Tamanho máximo para uma nova "janela"
  compilation-window-height 15) ;; Tamanho da "janela" de compilação
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximiza a janela após a inicialização
-
 (global-display-line-numbers-mode 1) ;; Exibe as linhas
 (global-hl-line-mode 1)              ;; Destaque na linha atual
 (global-auto-revert-mode 1)          ;; Não pede confirmação para recarregar um arquivo do disco
