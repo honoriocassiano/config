@@ -70,9 +70,6 @@
 (add-hook 'html-mode-hook
           (lambda () (setq tab-width 2)))
 
-;; TODO Dependendo do tema a espessura da fonte deveria ser diferente, mas especificação não leva isso em consideração
-(set-frame-font "Iosevka Custom Semi-Extended-12" t t)
-
 (setq split-width-threshold nil) ;; Não lembro
 
 (global-set-key (kbd "<f9>") 'compile) ;; Compila
@@ -240,6 +237,9 @@
 (add-hook 'focus-out-hook '(lambda ()
                              (interactive)
                              (save-some-buffers t)))
+
+;; TODO Dependendo do tema a espessura da fonte deveria ser diferente, mas especificação não leva isso em consideração
+(set-frame-font "Iosevka Custom Semi-Extended-12" t t)
 
 (setq
  gc-cons-threshold 16777216 ;; Oposto das primeiras linhas
