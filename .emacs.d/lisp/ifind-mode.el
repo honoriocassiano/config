@@ -113,7 +113,7 @@ It's a string with three %s that get replaced by:
   (let ((filename (buffer-substring-no-properties
                    (line-beginning-position) (line-end-position))))
     (if (> (length filename) 0)
-        (find-file filename)))
+        (find-file (concat default-directory filename))))
   (ifind-exit))
 
 (defun ifind-del-char ()
