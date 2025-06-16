@@ -36,20 +36,16 @@
 ;; adding characters. Use the up/down arrows to navigate and press RET to visit
 ;; the file under the cursor.  Any other key will abort the search.
 
-;; TODO Encontrar um comando que funcione no Windows
-(defvar ifind-command "find %s \\( %s \\) -prune -o -type f -iname \"*%s*\" -exec realpath --relative-to \"%s\" \{\} \\;"
-  "Shell command that performs the file search.
-It's a string with three %s that get replaced by:
- 1. The root directory where to search files on
- 2. The directories to exclude; built using vc-directory-exclusion-list
- 3. The string to search for in the filenames
- 4. The relative directory to use on print (same as root directory)")
+;; TODO Fazer uma limpa nos símbolos não utilizados
 
 (defvar ifind-min-length 2
   "Minimum length of the search string to trigger the shell command.")
 
 (defvar ifind-string ""
   "The current search string.")
+
+(defvar ifind-ignored-directories '("node_modules")
+  "Folders to be ignored")
 
 (defvar ifind-mode nil
   "Name of the minor mode, if non-nil.")
@@ -74,14 +70,6 @@ It's a string with three %s that get replaced by:
 (or (assq 'ifind-mode minor-mode-alist)
     (nconc minor-mode-alist
            (list '(ifind-mode ifind-mode))))
-
-(defvar ifind-excluded-dirs
-  (concat "-path "
-          (mapconcat #'(lambda (dir)
-                         (shell-quote-argument (concat "*/" dir)))
-                     vc-directory-exclusion-list
-                     " -o -path "))
-  "Substring within the find command, specifies which paths to ignore.")
 
 (defun ifind-mode ()
   "Start Ifind minor mode."
@@ -133,13 +121,21 @@ It's a string with three %s that get replaced by:
 (defun ifind-format-command (dir excluded-dirs str)
   (format ifind-command dir excluded-dirs str dir))
 
+(defun ifind--should-enter-directory (dir)
+  (let ((res)
+        (excl-dir-list (append vc-directory-exclusion-list ifind-ignored-directories)))
+    (dolist (excl-dir excl-dir-list res)
+      (if (string-match excl-dir dir)
+          (setq res t)))
+      (not res)))
+
 (defun ifind-update ()
   "Display the current search string and search for files."
   (switch-to-buffer "*ifind*")
   (erase-buffer)
   (let ((message-log-max nil))
     (if (>= (length ifind-string) ifind-min-length)
-        (shell-command
-         (ifind-format-command default-directory ifind-excluded-dirs ifind-string)
-         "*ifind*"))
-    (message "Find files matching: %s" ifind-string)))
+        (dolist (dir (directory-files-recursively default-directory ifind-string nil 'ifind--should-enter-directory))
+          (insert (file-relative-name dir default-directory) "\n")))
+    (message "Find files matching: %s" ifind-string))
+  (beginning-of-buffer))
