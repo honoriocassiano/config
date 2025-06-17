@@ -44,7 +44,7 @@
 (defvar ifind-string ""
   "The current search string.")
 
-(defvar ifind-ignored-directories '("node_modules")
+(defvar ifind-ignored-directories '("node_modules" "target")
   "Folders to be ignored")
 
 (defvar ifind-mode nil
@@ -121,11 +121,15 @@
 (defun ifind-format-command (dir excluded-dirs str)
   (format ifind-command dir excluded-dirs str dir))
 
+(defun ifind--list-excluded-dirs ()
+  (seq-map 'regexp-quote (append vc-directory-exclusion-list ifind-ignored-directories)))
+
+(setq ifind--escaped-dirs (ifind--list-excluded-dirs))
+
 (defun ifind--should-enter-directory (dir)
-  (let ((res)
-        (excl-dir-list (append vc-directory-exclusion-list ifind-ignored-directories)))
-    (dolist (excl-dir excl-dir-list res)
-      (if (string-match (regexp-quote excl-dir) dir)
+  (let ((res))
+    (dolist (excl-dir ifind--escaped-dirs res)
+      (if (string-match excl-dir dir)
           (setq res t)))
       (not res)))
 
@@ -133,6 +137,7 @@
   "Display the current search string and search for files."
   (switch-to-buffer "*ifind*")
   (erase-buffer)
+  (setq ifind--escaped-dirs (ifind--list-excluded-dirs))
   (let ((message-log-max nil))
     (if (>= (length ifind-string) ifind-min-length)
         (dolist (dir (directory-files-recursively default-directory ifind-string nil 'ifind--should-enter-directory))
