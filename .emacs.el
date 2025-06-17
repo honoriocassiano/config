@@ -174,7 +174,7 @@
   (setq default-directory (kass/session-dir-or-default))
   (ifind-mode))
 
-(defun kass/duplicate-and-comment (beg end)
+(defun kass/-duplicate-and-comment-line (beg end)
   (interactive)
   (evil-yank-line beg end)
   (evil-set-marker ?a)
@@ -192,7 +192,7 @@
 
 ;; TODO Ao desfazer a ação, o cursor não volta à posição original
 ;; TODO Não parece funcionar em todos os major modes
-(defun kass/duplicate-and-comment-region (beg end)
+(defun kass/-duplicate-and-comment-region (beg end)
   (interactive)
   (evil-exit-visual-state)
   (evil-set-marker ?r)
@@ -209,32 +209,40 @@
     )
   (evil-goto-mark ?r))
 
-(evil-define-key 'normal 'global (kbd "C-d") '(lambda ()
-                                                (interactive)
-                                                (evil-visual-state)
-                                                (kass/duplicate-and-comment (region-beginning) (region-end))))
+(defun kass/ifind ()
+  "Inicia o modo de busca de arquivos.
 
-(evil-define-key 'visual 'global (kbd "C-d") '(lambda ()
-                                                (interactive)
-                                                (kass/duplicate-and-comment-region (region-beginning) (region-end))))
+TODO: Verificar o motivo do texto pesquisado não estar aparecendo na barra de mensagens"
+  (interactive)
+  (cond ((eq evil-state 'insert) (evil-normal-state))
+        ((eq evil-state 'visual) (evil-exit-visual-state)))
+  (if (boundp 'kass/session-dir)
+      (ifind)
+    (error "Sessão não iniciada")))
 
-(evil-define-key 'normal 'global (kbd "C-p") '(lambda ()
-                                                (interactive)
-                                                (ifind)))
+(defun kass/-save-some-buffers ()
+  (interactive)
+  (save-some-buffers t))
 
-(evil-define-key 'visual 'global (kbd "C-p") '(lambda ()
-                                                (interactive)
-                                                (evil-exit-visual-state)
-                                                (ifind)))
+(defun kass/duplicate-and-comment ()
+  "Duplica a linha/região e comente a cópia.
 
-(evil-define-key 'insert 'global (kbd "C-p") '(lambda ()
-                                                (interactive)
-                                                (evil-normal-state)
-                                                (ifind)))
+TODO: Não funciona em todos os modos, principalmente quando utilizado no modo visual"
+  (interactive)
+  (cond ((eq evil-state 'normal)
+         (evil-visual-state)
+         (kass/duplicate-and-comment (region-beginning) (region-end)))
+        ((eq evil-state 'visual)
+         (kass/duplicate-and-comment-region (region-beginning) (region-end)))))
 
-(add-hook 'focus-out-hook '(lambda ()
-                             (interactive)
-                             (save-some-buffers t)))
+(evil-define-key 'normal 'global (kbd "C-d") 'kass/duplicate-and-comment)
+(evil-define-key 'visual 'global (kbd "C-d") 'kass/duplicate-and-comment)
+
+(global-set-key (kbd "C-x C-a p") 'kass/ifind)      ;; Encontrar arquivos do projeto
+(global-set-key (kbd "C-x C-a c") 'kass/session-cd) ;; Trocar de sessão
+(global-set-key (kbd "<f5>") 'eval-buffer)          ;; Recarregar o arquivo atual
+
+(add-hook 'focus-out-hook 'kass/-save-some-buffers)
 
 ;; TODO Dependendo do tema a espessura da fonte deveria ser diferente, mas especificação não leva isso em consideração
 (set-frame-font "Iosevka Custom Semi-Extended-12" t t)
