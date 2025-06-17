@@ -125,7 +125,7 @@
   (let ((res)
         (excl-dir-list (append vc-directory-exclusion-list ifind-ignored-directories)))
     (dolist (excl-dir excl-dir-list res)
-      (if (string-match excl-dir dir)
+      (if (string-match (regexp-quote excl-dir) dir)
           (setq res t)))
       (not res)))
 
