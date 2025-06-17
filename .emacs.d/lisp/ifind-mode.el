@@ -138,9 +138,11 @@
   (switch-to-buffer "*ifind*")
   (erase-buffer)
   (setq ifind--escaped-dirs (ifind--list-excluded-dirs))
-  (let ((message-log-max nil))
-    (if (>= (length ifind-string) ifind-min-length)
-        (dolist (dir (directory-files-recursively default-directory ifind-string nil 'ifind--should-enter-directory))
-          (insert (file-relative-name dir default-directory) "\n")))
-    (message "Find files matching: %s" ifind-string))
-  (beginning-of-buffer))
+  (if (>= (length ifind-string) ifind-min-length)
+      (let ((dir-list (directory-files-recursively default-directory ifind-string nil 'ifind--should-enter-directory)))
+        (insert (mapconcat
+                 '(lambda (dir) (file-relative-name dir default-directory))
+                 dir-list
+                 "\n"))
+        (beginning-of-buffer)
+        (message "Find files matching: %s" ifind-string))))
