@@ -1,5 +1,5 @@
 (setq
- gc-cons-threshold 402653184 ;; Teoricamente aumenta a velocidade de inicialização
+ gc-cons-threshold 402653184 ;; Inicia o garbage collector em 384 MB
  gc-cons-percentage 0.6)
 
 (setq kass/custom-script-dir "~/.emacs.d/lisp/")
@@ -35,11 +35,21 @@
  scroll-step 1                 ;; Scroll do mouse funcional
  display-line-numbers-width 4  ;; Quantidade de dígitos reservados para os números das linhas
  split-height-threshold 15     ;; Tamanho máximo para uma nova "janela"
- compilation-window-height 15) ;; Tamanho da "janela" de compilação
+ compilation-window-height 15  ;; Tamanho da "janela" de compilação
+ short-answers t               ;; "y" ou "n" em vez de "yes" ou "no"
+ require-final-new-line t      ;; Nova linha no final do arquivo
+ tab-always-indent 'complete)  ;; indenta OU autocompleta
 
-(global-display-line-numbers-mode 1) ;; Exibe as linhas
-(global-hl-line-mode 1)              ;; Destaque na linha atual
-(global-auto-revert-mode 1)          ;; Não pede confirmação para recarregar um arquivo do disco
+;; UTF-8 em tudo
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+
+(global-display-line-numbers-mode t) ;; Exibe as linhas
+(global-hl-line-mode t)              ;; Destaque na linha atual
+(global-auto-revert-mode t)          ;; Não pede confirmação para recarregar um arquivo do disco
+(size-indication-mode t)             ;; Exibe o tamanho do arquivo
 
 (use-package evil
 
@@ -238,9 +248,11 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
 (evil-define-key 'normal 'global (kbd "C-d") 'kass/duplicate-and-comment)
 (evil-define-key 'visual 'global (kbd "C-d") 'kass/duplicate-and-comment)
 
-(global-set-key (kbd "C-x C-a p") 'kass/ifind)      ;; Encontrar arquivos do projeto
-(global-set-key (kbd "C-x C-a c") 'kass/session-cd) ;; Trocar de sessão
-(global-set-key (kbd "<f5>") 'eval-buffer)          ;; Recarregar o arquivo atual
+(global-set-key (kbd "C-k") nil)      ;; O comportamento padrão é chamar o "kill-line"
+
+(global-set-key (kbd "C-k p") 'kass/ifind)      ;; Encontrar arquivos do projeto
+(global-set-key (kbd "C-k c") 'kass/session-cd) ;; Trocar de sessão
+(global-set-key (kbd "<f5>") 'eval-buffer)      ;; Recarregar o arquivo atual
 
 (add-hook 'focus-out-hook 'kass/-save-some-buffers)
 
@@ -248,5 +260,5 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
 (set-frame-font "Iosevka Custom Semi-Extended-12" t t)
 
 (setq
- gc-cons-threshold 16777216 ;; Oposto das primeiras linhas
+ gc-cons-threshold 104857600 ;; Inicia o garbage collector em 100MB
  gc-cons-percentage 0.1)
