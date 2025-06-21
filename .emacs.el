@@ -38,7 +38,8 @@
  compilation-window-height 15  ;; Tamanho da "janela" de compilação
  short-answers t               ;; "y" ou "n" em vez de "yes" ou "no"
  require-final-new-line t      ;; Nova linha no final do arquivo
- tab-always-indent 'complete)  ;; indenta OU autocompleta
+ tab-always-indent 'complete   ;; indenta OU autocompleta
+ compilation-save-buffers-predicate 'ignore) ;; Ignora o salvamento dos arquivos ao compilar
 
 ;; UTF-8 em tudo
 (prefer-coding-system 'utf-8)
@@ -80,7 +81,8 @@
 
 (setq split-width-threshold nil) ;; Não lembro
 
-(global-set-key (kbd "<f9>") 'compile) ;; Compila
+(global-set-key (kbd "S-<f9>") 'compile)    ;; Compila (sem precisar de sessão)
+(global-set-key (kbd "<f9>") 'kass/compile) ;; Compila
 (global-set-key (kbd "<f6>") 'dired)   ;; Abre um diretório
 
 ;; C-z é esquisito então eu desabilito no modo evil
@@ -157,6 +159,26 @@
                                                       (find-file "~/.emacs.el")))
 
 ;; Funções personalizadas
+
+(defun kass/check-session ()
+  (if (not (boundp 'kass/session-dir))
+      (error "Sessão não iniciada")))
+
+(defun kass/file-inside-dir-p (fname dir)
+  (string-prefix-p (expand-file-name dir) fname))
+
+(defun kass/current-buffer-inside-session-dir-p ()
+  (interactive)
+  (if (boundp 'kass/session-dir)
+      (kass/file-inside-dir-p buffer-file-name kass/session-dir)
+    nil))
+
+(defun kass/compile ()
+  (interactive)
+  (kass/check-session)
+  (save-some-buffers t 'kass/current-buffer-inside-session-dir-p)
+  (call-interactively 'compile))
+
 (defun kass/session-cd (folder)
   (interactive (list
                 (read-directory-name "Pasta para a sessão: ")))
@@ -220,15 +242,12 @@
   (evil-goto-mark ?r))
 
 (defun kass/ifind ()
-  "Inicia o modo de busca de arquivos.
-
-TODO: Verificar o motivo do texto pesquisado não estar aparecendo na barra de mensagens"
+  "Inicia o modo de busca de arquivos."
   (interactive)
+  (kass/check-session)
   (cond ((eq evil-state 'insert) (evil-normal-state))
         ((eq evil-state 'visual) (evil-exit-visual-state)))
-  (if (boundp 'kass/session-dir)
-      (ifind)
-    (error "Sessão não iniciada")))
+  (ifind))
 
 (defun kass/-save-some-buffers ()
   (interactive)
@@ -241,9 +260,9 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
   (interactive)
   (cond ((eq evil-state 'normal)
          (evil-visual-state)
-         (kass/duplicate-and-comment (region-beginning) (region-end)))
+         (kass/-duplicate-and-comment (region-beginning) (region-end)))
         ((eq evil-state 'visual)
-         (kass/duplicate-and-comment-region (region-beginning) (region-end)))))
+         (kass/-duplicate-and-comment-region (region-beginning) (region-end)))))
 
 (evil-define-key 'normal 'global (kbd "C-d") 'kass/duplicate-and-comment)
 (evil-define-key 'visual 'global (kbd "C-d") 'kass/duplicate-and-comment)
