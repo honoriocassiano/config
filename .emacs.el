@@ -39,6 +39,7 @@
  short-answers t               ;; "y" ou "n" em vez de "yes" ou "no"
  require-final-new-line t      ;; Nova linha no final do arquivo
  tab-always-indent 'complete   ;; indenta OU autocompleta
+ visible-bell t                ;; Para de tocar o som irritante
  compilation-save-buffers-predicate 'ignore) ;; Ignora o salvamento dos arquivos ao compilar
 
 ;; UTF-8 em tudo
@@ -72,6 +73,8 @@
  (evil-set-initial-state 'epa-key-list-mode 'motion))
 
 (evil-mode 1)
+(setq-default evil-kill-on-visual-paste nil)
+
 (modify-syntax-entry ?_ "w")
 (add-hook 'c-mode-common-hook
           (lambda () (modify-syntax-entry ?_ "w")))
@@ -139,14 +142,6 @@
 (evil-define-key 'insert 'global (kbd "M-<right>") 'evil-forward-char)
 (evil-define-key 'insert 'global (kbd "M-<left>")  'evil-backward-char)
 
-;; Colar no modo visual não limpa altera o valor copiado
-(evil-define-key 'visual 'global (kbd "p") '(lambda ()
-                                              (interactive)
-                                              (evil-paste-after 1)
-                                              (evil-visual-restore)
-                                              (evil-yank-line (region-beginning) (region-end))
-                                              (evil-normal-state)))
-
 (evil-set-leader 'normal (kbd "<SPC>"))
 (evil-set-leader 'motion (kbd "<SPC>"))
 (evil-set-leader 'visual (kbd "<SPC>"))
@@ -178,6 +173,21 @@
   (kass/check-session)
   (save-some-buffers t 'kass/current-buffer-inside-session-dir-p)
   (call-interactively 'compile))
+
+(defun kass/quote-region (beg end)
+  (let ((str (buffer-substring beg end)))
+    (replace-regexp-in-region (regexp-quote str) "“\\\&”" beg end)))
+
+(defun kass/quote-current-region ()
+  (interactive)
+  (kass/quote-region (region-beginning) (region-end)))
+
+;; TODO Verificar se o call-interactively é realmente necessário
+(defun kass/quote-current-word ()
+  (interactive)
+  (evil-visual-state)
+  (call-interactively 'evil-inner-WORD)
+  (kass/quote-region (region-beginning) (region-end)))
 
 (defun kass/session-cd (folder)
   (interactive (list
@@ -266,6 +276,9 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
 
 (evil-define-key 'normal 'global (kbd "C-d") 'kass/duplicate-and-comment)
 (evil-define-key 'visual 'global (kbd "C-d") 'kass/duplicate-and-comment)
+
+(evil-define-key 'normal 'global (kbd "C-k q") 'kass/quote-current-word)
+(evil-define-key 'visual 'global (kbd "C-k q") 'kass/quote-current-region)
 
 (global-set-key (kbd "C-k") nil)      ;; O comportamento padrão é chamar o "kill-line"
 
