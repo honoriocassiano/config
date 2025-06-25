@@ -54,26 +54,30 @@
 (size-indication-mode t)             ;; Exibe o tamanho do arquivo
 
 (use-package evil
+  :config
+  (setq evil-ex-search-case 'sensisite)
+  (setq evil-kill-on-visual-paste nil)
+  (setq evil-split-window-below t)
+  (setq evil-vsplit-window-right t)
 
- :custom
- (setq evil-emacs-state-modes '())
- (evil-set-initial-state 'eshell-mode 'normal)
- (evil-set-initial-state 'term-mode 'normal)
- (evil-set-initial-state 'image-mode 'motion)
- (evil-set-initial-state 'special-mode 'motion)
- (evil-set-initial-state 'pdf-view-mode 'motion)
- (evil-set-initial-state 'org-agenda-mode 'motion)
- (evil-set-initial-state 'compilation-mode 'normal)
- (evil-set-initial-state 'grep-mode 'motion)
- (evil-set-initial-state 'Info-mode 'motion)
- (evil-set-initial-state 'magit--mode 'motion)
- (evil-set-initial-state 'magit-status-mode 'motion)
- (evil-set-initial-state 'magit-diff-mode 'motion)
- (evil-set-initial-state 'magit-stashes-mode 'motion)
- (evil-set-initial-state 'epa-key-list-mode 'motion))
+  :custom
+  (setq evil-emacs-state-modes '())
+  (evil-set-initial-state 'eshell-mode 'normal)
+  (evil-set-initial-state 'term-mode 'normal)
+  (evil-set-initial-state 'image-mode 'motion)
+  (evil-set-initial-state 'special-mode 'motion)
+  (evil-set-initial-state 'pdf-view-mode 'motion)
+  (evil-set-initial-state 'org-agenda-mode 'motion)
+  (evil-set-initial-state 'compilation-mode 'normal)
+  (evil-set-initial-state 'grep-mode 'motion)
+  (evil-set-initial-state 'Info-mode 'motion)
+  (evil-set-initial-state 'magit--mode 'motion)
+  (evil-set-initial-state 'magit-status-mode 'motion)
+  (evil-set-initial-state 'magit-diff-mode 'motion)
+  (evil-set-initial-state 'magit-stashes-mode 'motion)
+  (evil-set-initial-state 'epa-key-list-mode 'motion))
 
 (evil-mode 1)
-(setq-default evil-kill-on-visual-paste nil)
 
 (modify-syntax-entry ?_ "w")
 (add-hook 'c-mode-common-hook
