@@ -146,3 +146,5 @@
                  "\n"))
         (beginning-of-buffer)
         (message "Find files matching: %s" ifind-string))))
+
+(provide 'ifind-mode)

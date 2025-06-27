@@ -5,6 +5,11 @@
 (setq kass/custom-script-dir "~/.emacs.d/lisp/")
 (setq kass/emacs-custom-file "custom.el")
 
+(add-to-list 'load-path kass/custom-script-dir)
+
+(require 'ifind-mode)
+(require 'writeroom-mode)
+
 (setq custom-file (concat kass/custom-script-dir kass/emacs-custom-file)) ;; Arquivo diferenciado para salvar as variáveis customizadas
 
 (fido-mode t)          ;; Autocomplete
@@ -213,8 +218,6 @@
   (load-file (concat kass/custom-script-dir name)))
 
 (kass/load-custom-file kass/emacs-custom-file) ;; Carrega o arquivo com as variáveis customizadas pelo Emacs
-(kass/load-custom-file "writeroom-mode.el")    ;; Modo writeroom para escrita
-(kass/load-custom-file "ifind-mode.el")        ;; Encontra arquivos pelo nome
 
 (defun ifind ()
   (interactive)
