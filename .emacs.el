@@ -7,11 +7,11 @@
 
 (setq custom-file (concat kass/custom-script-dir kass/emacs-custom-file)) ;; Arquivo diferenciado para salvar as variáveis customizadas
 
-(ido-mode 1)         ;; Autocomplete
-(ido-everywhere 1)   ;; Autocomplete (de novo)
-(menu-bar-mode -1)   ;; Remove a barra de menu
-(tool-bar-mode -1)   ;; Remove a barra de ferramentas
-(scroll-bar-mode -1) ;; Remove a barra de rolagem
+(fido-mode t)          ;; Autocomplete
+(fido-vertical-mode t) ;; Alternativas aparecem verticalment
+(menu-bar-mode -1)     ;; Remove a barra de menu
+(tool-bar-mode -1)     ;; Remove a barra de ferramentas
+(scroll-bar-mode -1)   ;; Remove a barra de rolagem
 (column-number-mode 1) ;; Exibe (linha, coluna) na barra de status
 (blink-cursor-mode -1) ;; Cursos para de piscar
 (tooltip-mode -1)      ;; Não lembro
@@ -19,7 +19,9 @@
 (savehist-mode 1)      ;; Aparentemente salva o histórico, mas não parece funcionar
 
 (setq-default
- indent-tabs-mode nil) ;; Alguma coisa relativa a tabs vs espaços
+ indent-tabs-mode nil         ;; Alguma coisa relativa a tabs vs espaços
+ display-line-numbers-width 4 ;; Quantidade de dígitos reservados para os números das linhas
+ )
 
 (setq
  display-line-numbers-type 'relative ;; Números relativos nas linhas
@@ -33,7 +35,6 @@
  c-basic-offset 4              ;; Mesma merda só que diferente
  make-backup-files nil         ;; Não salva arquivos de backup
  scroll-step 1                 ;; Scroll do mouse funcional
- display-line-numbers-width 4  ;; Quantidade de dígitos reservados para os números das linhas
  split-height-threshold 15     ;; Tamanho máximo para uma nova "janela"
  compilation-window-height 15  ;; Tamanho da "janela" de compilação
  short-answers t               ;; "y" ou "n" em vez de "yes" ou "no"
