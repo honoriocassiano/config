@@ -9,8 +9,11 @@
 
 (require 'ifind-mode)
 (require 'writeroom-mode)
+(require 'simpc-mode)
 
 (setq custom-file (concat kass/custom-script-dir kass/emacs-custom-file)) ;; Arquivo diferenciado para salvar as variáveis customizadas
+
+(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
 
 (fido-mode t)          ;; Autocomplete
 (fido-vertical-mode t) ;; Alternativas aparecem verticalment
