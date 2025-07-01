@@ -115,8 +115,13 @@
 (evil-ex-define-cmd "E" 'evil-edit)      ;; e ou E editam
 
 ;; Comandos personalizados do Evil
+(evil-define-operator kass/evil-align (begin end regex)
+  (interactive "<r><a>")
+  (align-regexp begin end (concat "\\(\\s-*\\)" (regexp-quote regex))))
+
 (evil-ex-define-cmd "Goyo" 'writeroom-mode)        ;; inicia o "writeroom"
 (evil-ex-define-cmd "SessionCd" 'kass/session-cd)  ;; modo de "sessão"
+(evil-ex-define-cmd "Align" 'kass/evil-align)      ;; align-regexp mas como comando evil
 
 (evil-define-minor-mode-key 'normal 'writeroom-mode (kbd "<up>") 'evil-previous-visual-line)
 (evil-define-minor-mode-key 'normal 'writeroom-mode (kbd "<down>") 'evil-next-visual-line)
