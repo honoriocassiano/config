@@ -25,6 +25,7 @@
 (tooltip-mode -1)      ;; Não lembro
 (recentf-mode 1)       ;; Não sei
 (savehist-mode 1)      ;; Aparentemente salva o histórico, mas não parece funcionar
+(electric-indent-mode -1) ;; Desativa a indentação semiautomática
 
 (setq-default
  indent-tabs-mode nil         ;; Alguma coisa relativa a tabs vs espaços
