@@ -44,7 +44,7 @@
 (defvar ifind-string ""
   "The current search string.")
 
-(defvar ifind-ignored-directories '("node_modules" "target")
+(defvar ifind-ignored-directories '("node_modules" "target" "venv" "build")
   "Folders to be ignored")
 
 (defvar ifind-mode nil
