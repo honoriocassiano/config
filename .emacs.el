@@ -50,7 +50,10 @@
  require-final-new-line t      ;; Nova linha no final do arquivo
  tab-always-indent 'complete   ;; indenta OU autocompleta
  visible-bell t                ;; Para de tocar o som irritante
- compilation-save-buffers-predicate 'ignore) ;; Ignora o salvamento dos arquivos ao compilar
+ compilation-save-buffers-predicate 'ignore  ;; Ignora o salvamento dos arquivos ao compilar
+ ls-lisp-ignore-case t
+ ls-lisp-dirs-first t
+ )
 
 ;; UTF-8 em tudo
 (prefer-coding-system 'utf-8)
