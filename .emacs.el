@@ -63,6 +63,10 @@
 (global-auto-revert-mode t)          ;; Não pede confirmação para recarregar um arquivo do disco
 (size-indication-mode t)             ;; Exibe o tamanho do arquivo
 
+(use-package dired
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
+
 (use-package evil
   :config
   (setq evil-ex-search-case 'sensisite)
