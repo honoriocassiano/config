@@ -2,10 +2,15 @@
  gc-cons-threshold 402653184 ;; Inicia o garbage collector em 384 MB
  gc-cons-percentage 0.6)
 
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/" ) t)
+(package-initialize)
+
 (setq kass/custom-script-dir "~/.emacs.d/lisp/")
 (setq kass/emacs-custom-file "custom.el")
 
 (add-to-list 'load-path kass/custom-script-dir)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
 (require 'ifind-mode)
 (require 'writeroom-mode)
