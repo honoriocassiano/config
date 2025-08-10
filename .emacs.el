@@ -55,7 +55,10 @@
  require-final-new-line t      ;; Nova linha no final do arquivo
  tab-always-indent 'complete   ;; indenta OU autocompleta
  visible-bell t                ;; Para de tocar o som irritante
- compilation-save-buffers-predicate 'ignore) ;; Ignora o salvamento dos arquivos ao compilar
+ compilation-save-buffers-predicate 'ignore  ;; Ignora o salvamento dos arquivos ao compilar
+ ls-lisp-ignore-case t
+ ls-lisp-dirs-first t
+ )
 
 ;; UTF-8 em tudo
 (prefer-coding-system 'utf-8)
@@ -67,6 +70,10 @@
 (global-hl-line-mode t)              ;; Destaque na linha atual
 (global-auto-revert-mode t)          ;; Não pede confirmação para recarregar um arquivo do disco
 (size-indication-mode t)             ;; Exibe o tamanho do arquivo
+
+(use-package dired
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
 
 (use-package evil
   :config
