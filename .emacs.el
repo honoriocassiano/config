@@ -102,6 +102,7 @@
   (evil-set-initial-state 'epa-key-list-mode 'motion))
 
 (evil-mode 1)
+(evil-select-search-module 'evil-search-module 'evil-search)
 
 (modify-syntax-entry ?_ "w")
 (add-hook 'c-mode-common-hook
