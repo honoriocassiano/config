@@ -151,10 +151,10 @@
 (evil-define-minor-mode-key 'normal 'writeroom-mode (kbd "<down>") 'evil-next-visual-line)
 
 ;; Trocar de janela com as setas do mouse
-(evil-define-key 'normal 'global (kbd "C-w <up>") 'evil-window-up)
-(evil-define-key 'normal 'global (kbd "C-w <down>") 'evil-window-down)
-(evil-define-key 'normal 'global (kbd "C-w <left>") 'evil-window-left)
-(evil-define-key 'normal 'global (kbd "C-w <right>") 'evil-window-right)
+(evil-define-key '(normal motion) 'global (kbd "C-w <up>") 'evil-window-up)
+(evil-define-key '(normal motion) 'global (kbd "C-w <down>") 'evil-window-down)
+(evil-define-key '(normal motion) 'global (kbd "C-w <left>") 'evil-window-left)
+(evil-define-key '(normal motion) 'global (kbd "C-w <right>") 'evil-window-right)
 
 ;; Comentários
 (evil-define-key 'normal 'global (kbd "C-/") 'comment-line)
@@ -190,11 +190,11 @@
 (evil-set-leader 'visual (kbd "<SPC>"))
 
 ;; Abrir o .emacs.el
-(evil-define-key 'normal 'global (kbd "<leader>s") '(lambda ()
-                                                      (interactive)
-                                                      (split-window-right)
-                                                      (windmove-right)
-                                                      (find-file "~/.emacs.el")))
+(evil-define-key '(normal motion) 'global (kbd "<leader>s") '(lambda ()
+							       (interactive)
+							       (split-window-right)
+							       (windmove-right)
+							       (find-file "~/.emacs.el")))
 
 ;; Funções personalizadas
 
