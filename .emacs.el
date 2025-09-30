@@ -62,6 +62,15 @@
  ls-lisp-dirs-first t
  )
 
+(add-to-list 'display-buffer-alist
+             '("\\*\\([Hh]elp\\|Command History\\|command-log\\|Backtrace\\|Compile-log\\|Messages\\|Warnings\\|compilation\\)\\*"
+               (display-buffer-in-side-window)
+               (side . bottom)
+               (slot . 0)
+               (window-height . 0.33)
+               (window-parameters
+                (no-delete-other-windows . nil))))
+
 ;; UTF-8 em tudo
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
