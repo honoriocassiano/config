@@ -32,11 +32,11 @@
 (savehist-mode 1)      ;; Aparentemente salva o histórico, mas não parece funcionar
 (electric-indent-mode -1) ;; Desativa a indentação semiautomática
 
-(toggle-truncate-lines 1)
 
 (setq-default
- indent-tabs-mode nil         ;; Alguma coisa relativa a tabs vs espaços
+ ;; indent-tabs-mode nil         ;; Alguma coisa relativa a tabs vs espaços
  display-line-numbers-width 4 ;; Quantidade de dígitos reservados para os números das linhas
+ truncate-lines t             ;; Não quebrar linhas por padrão
  )
 
 (setq
