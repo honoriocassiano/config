@@ -62,12 +62,25 @@
  ls-lisp-dirs-first t
  )
 
+(setq switch-to-buffer-in-dedicated-window 'pop)
+
+(add-to-list 'display-buffer-alist
+             '("\\*ifind\\*"
+               (display-buffer-in-side-window)
+               (side . bottom)
+               (slot . 0)
+               (window-height . 0.3)
+	       (dedicated . t)
+               (window-parameters
+                (no-delete-other-windows . nil))))
+
 (add-to-list 'display-buffer-alist
              '("\\*\\([Hh]elp\\|Command History\\|command-log\\|Backtrace\\|Compile-log\\|Messages\\|Warnings\\|compilation\\)\\*"
                (display-buffer-in-side-window)
                (side . bottom)
                (slot . 0)
-               (window-height . 0.33)
+	       (dedicated . t)
+	       (window-height . 0.3)
                (window-parameters
                 (no-delete-other-windows . nil))))
 
@@ -317,6 +330,7 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
 
 (evil-define-key 'normal 'global (kbd "C-d") 'kass/duplicate-and-comment)
 (evil-define-key 'visual 'global (kbd "C-d") 'kass/duplicate-and-comment)
+(evil-define-key '(normal insert visual replace motion) 'global (kbd "C-p") nil) ;; Nem sei o que isso fazia antes
 
 (evil-define-key 'normal 'global (kbd "C-k q") 'kass/quote-current-word)
 (evil-define-key 'visual 'global (kbd "C-k q") 'kass/quote-current-region)
@@ -324,6 +338,7 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
 (global-set-key (kbd "C-k") nil)      ;; O comportamento padrão é chamar o "kill-line"
 
 (global-set-key (kbd "C-k p") 'kass/ifind)      ;; Encontrar arquivos do projeto
+(global-set-key (kbd "C-p")   'kass/ifind)      ;; Mesmo atalho do Neovim
 (global-set-key (kbd "C-k c") 'kass/session-cd) ;; Trocar de sessão
 (global-set-key (kbd "<f5>") 'eval-buffer)      ;; Recarregar o arquivo atual
 

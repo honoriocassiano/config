@@ -36,8 +36,6 @@
 ;; adding characters. Use the up/down arrows to navigate and press RET to visit
 ;; the file under the cursor.  Any other key will abort the search.
 
-;; TODO Fazer uma limpa nos símbolos não utilizados
-
 (defvar ifind-min-length 2
   "Minimum length of the search string to trigger the shell command.")
 
@@ -50,6 +48,10 @@
 (defvar ifind-mode nil
   "Name of the minor mode, if non-nil.")
 
+(setq ifind--go-back-window nil)
+
+(defconst ifind--buffer-name "*ifind*")
+
 (defvar ifind-mode-map
   (let ((i ?\s)
         (map (make-keymap)))
@@ -60,6 +62,7 @@
     (define-key map [up] 'previous-line)
     (define-key map [down] 'next-line)
     (define-key map [return] 'ifind-visit-file)
+    (define-key map (kbd "C-v") 'ifind-visit-file-split-vertically)
     (define-key map [backspace] 'ifind-del-char)
     ;; All other keys will abort ifind
     (define-key map [t] 'ifind-abort)
@@ -76,9 +79,15 @@
   (interactive)
   (setq ifind-string ""
         ifind-mode " Ifind"
-        overriding-terminal-local-map ifind-mode-map)
+        overriding-terminal-local-map ifind-mode-map
+	ifind--go-back-window (selected-window))
   (looking-at "")
   (force-mode-line-update)
+  ;; Verificar se existe um modo melhor de fazer isso pq não é possível que não exista algo no Emacs que
+  ;; crie uma nova janela E um novo buffer
+  (generate-new-buffer ifind--buffer-name)
+  (display-buffer ifind--buffer-name)
+  (select-window (get-buffer-window ifind--buffer-name))
   (ifind-update))
 
 (defun ifind-printing-char ()
@@ -97,11 +106,26 @@
 (defun ifind-visit-file ()
   "Open the file under the cursor in the *ifind* buffer."
   (interactive)
-  (set-buffer "*ifind*")
+  (set-buffer ifind--buffer-name)
   (let ((filename (buffer-substring-no-properties
-                   (line-beginning-position) (line-end-position))))
+		   (line-beginning-position) (line-end-position))))
     (if (> (length filename) 0)
-        (find-file (concat default-directory filename))))
+	(progn
+	  (select-window ifind--go-back-window)
+	  (find-file (concat default-directory filename)))))
+  (ifind-exit))
+
+(defun ifind-visit-file-split-vertically ()
+  "Open the file under the cursor in the *ifind* buffer."
+  (interactive)
+  (set-buffer ifind--buffer-name)
+  (let ((filename (buffer-substring-no-properties
+		   (line-beginning-position) (line-end-position))))
+    (if (> (length filename) 0)
+	(progn
+	  (select-window ifind--go-back-window)
+	  (select-window (split-window-right))
+	  (find-file (concat default-directory filename)))))
   (ifind-exit))
 
 (defun ifind-del-char ()
@@ -116,7 +140,8 @@
   (setq ifind-mode nil
         overriding-terminal-local-map nil)
   (force-mode-line-update)
-  (kill-buffer "*ifind*"))
+  (setq ifind--go-back-window nil)
+  (kill-buffer ifind--buffer-name))
 
 (defun ifind-format-command (dir excluded-dirs str)
   (format ifind-command dir excluded-dirs str dir))
@@ -135,7 +160,7 @@
 
 (defun ifind-update ()
   "Display the current search string and search for files."
-  (switch-to-buffer "*ifind*")
+  (switch-to-buffer ifind--buffer-name)
   (erase-buffer)
   (setq ifind--escaped-dirs (ifind--list-excluded-dirs))
   (if (>= (length ifind-string) ifind-min-length)
@@ -145,6 +170,12 @@
                  dir-list
                  "\n"))
         (beginning-of-buffer)
-        (message "Find files matching: %s" ifind-string))))
+        (message "Find files matching: %s" ifind-string))
+
+    (let ((dir-list (directory-files default-directory nil "[^.]+" t 10))) ;; Remove as pastas '.' '..' da busca
+      (insert (mapconcat 'identity dir-list "\n"))
+      (beginning-of-buffer)
+      (message "Find files matching: %s" ifind-string))
+    ))
 
 (provide 'ifind-mode)
