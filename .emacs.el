@@ -38,6 +38,7 @@
 
 (setq-default
  ;; indent-tabs-mode nil         ;; Alguma coisa relativa a tabs vs espaços
+ display-line-numbers-width-start nil
  display-line-numbers-width 4 ;; Quantidade de dígitos reservados para os números das linhas
  truncate-lines t             ;; Não quebrar linhas por padrão
  )
@@ -111,6 +112,7 @@
   (setq evil-kill-on-visual-paste nil)
   (setq evil-split-window-below t)
   (setq evil-vsplit-window-right t)
+  (setq evil-undo-system 'undo-redo)
 
   :custom
   (setq evil-emacs-state-modes '())
