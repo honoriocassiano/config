@@ -102,6 +102,8 @@
 (use-package evil
   :config
   (setq evil-ex-search-case 'sensisite)
+  (setq evil-ex-search-persistent-highlight nil)
+  (setq evil-ex-interactive-search-highlight nil)
   (setq evil-kill-on-visual-paste nil)
   (setq evil-split-window-below t)
   (setq evil-vsplit-window-right t)
