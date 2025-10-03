@@ -6,8 +6,13 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/" ) t)
 (package-initialize)
 
-(setq kass/custom-script-dir "~/.emacs.d/lisp/")
-(setq kass/emacs-custom-file "custom.el")
+;; Localizações/arquivos personalizadas
+(setq
+ kass/custom-script-dir "~/.emacs.d/lisp/"
+ kass/emacs-custom-file "custom.el"
+
+ custom-file (concat kass/custom-script-dir kass/emacs-custom-file) ;; Arquivo diferenciado para salvar as variáveis customizadas
+ )
 
 (add-to-list 'load-path kass/custom-script-dir)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -15,8 +20,6 @@
 (require 'ifind-mode)
 (require 'writeroom-mode)
 (require 'simpc-mode)
-
-(setq custom-file (concat kass/custom-script-dir kass/emacs-custom-file)) ;; Arquivo diferenciado para salvar as variáveis customizadas
 
 (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
 
@@ -58,12 +61,13 @@
  tab-always-indent 'complete   ;; indenta OU autocompleta
  visible-bell t                ;; Para de tocar o som irritante
  compilation-save-buffers-predicate 'ignore  ;; Ignora o salvamento dos arquivos ao compilar
- ls-lisp-ignore-case t
- ls-lisp-dirs-first t
+ ls-lisp-ignore-case t         ;; Relativo a listagem de arquivos
+ ls-lisp-dirs-first t          ;; Idem
+ switch-to-buffer-in-dedicated-window 'pop ;; ???
+ split-width-threshold nil                 ;; ???
  )
 
-(setq switch-to-buffer-in-dedicated-window 'pop)
-
+;; TODO Verificar se está configurado corretamente
 (add-to-list 'display-buffer-alist
              '("\\*ifind\\*"
                (display-buffer-in-side-window)
@@ -135,23 +139,23 @@
 (add-hook 'html-mode-hook
           (lambda () (setq tab-width 2)))
 
-(setq split-width-threshold nil) ;; Não lembro
 
 (global-set-key (kbd "S-<f9>") 'compile)    ;; Compila (sem precisar de sessão)
 (global-set-key (kbd "<f9>") 'kass/compile) ;; Compila
 (global-set-key (kbd "<f6>") 'dired)   ;; Abre um diretório
 
 ;; C-z é esquisito então eu desabilito no modo evil
-(define-key evil-insert-state-map (kbd "C-z") nil)
-(define-key evil-motion-state-map (kbd "C-z") nil)
-(define-key evil-visual-state-map (kbd "C-z") nil)
-(define-key evil-replace-state-map (kbd "C-z") nil)
+(define-key evil-insert-state-map   (kbd "C-z") nil)
+(define-key evil-motion-state-map   (kbd "C-z") nil)
+(define-key evil-visual-state-map   (kbd "C-z") nil)
+(define-key evil-replace-state-map  (kbd "C-z") nil)
 (define-key evil-operator-state-map (kbd "C-z") nil)
 ;; E no emacs
 (global-set-key (kbd "C-z") nil)
 
 (evil-ex-define-cmd "W" 'evil-write)     ;; w ou W salvam
 (evil-ex-define-cmd "E" 'evil-edit)      ;; e ou E editam
+(evil-ex-define-cmd "Q" 'evil-quit)      ;; q ou Q fecham
 
 ;; Comandos personalizados do Evil
 (evil-define-operator kass/evil-align (begin end regex)
@@ -159,6 +163,10 @@
   (align-regexp begin end (concat "\\(\\s-*\\)" (regexp-quote regex))))
 
 (evil-ex-define-cmd "Goyo" 'writeroom-mode)        ;; inicia o "writeroom"
+;; TODO Verificar um modo de passar o diretório diretamente no comando, dado que essa chamada
+;;  abre o modo interativo do Emacs. O maior problema é que o o modo interativo Evil não
+;;  aceita diretórios como parâmetros. Uma ideia é aceitar um arquivo('<f>') e tentar
+;;  filtrar somente os diretórios, mas é necessário validar se é possível fazer isto.
 (evil-ex-define-cmd "SessionCd" 'kass/session-cd)  ;; modo de "sessão"
 (evil-ex-define-cmd "Align" 'kass/evil-align)      ;; align-regexp mas como comando evil
 
@@ -207,8 +215,7 @@
 ;; Abrir o .emacs.el
 (evil-define-key '(normal motion) 'global (kbd "<leader>s") '(lambda ()
 							       (interactive)
-							       (split-window-right)
-							       (windmove-right)
+							       (select-window (split-window-right))
 							       (find-file "~/.emacs.el")))
 
 ;; Funções personalizadas
@@ -267,11 +274,6 @@
 
 (kass/load-custom-file kass/emacs-custom-file) ;; Carrega o arquivo com as variáveis customizadas pelo Emacs
 
-(defun ifind ()
-  (interactive)
-  (setq default-directory (kass/session-dir-or-default))
-  (ifind-mode))
-
 (defun kass/-duplicate-and-comment-line (beg end)
   (interactive)
   (evil-yank-line beg end)
@@ -313,7 +315,9 @@
   (kass/check-session)
   (cond ((eq evil-state 'insert) (evil-normal-state))
         ((eq evil-state 'visual) (evil-exit-visual-state)))
-  (ifind))
+  (progn
+    (setq default-directory (kass/session-dir-or-default))
+    (ifind-mode)))
 
 (defun kass/-save-some-buffers ()
   (interactive)
@@ -342,7 +346,7 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
 (global-set-key (kbd "C-k p") 'kass/ifind)      ;; Encontrar arquivos do projeto
 (global-set-key (kbd "C-p")   'kass/ifind)      ;; Mesmo atalho do Neovim
 (global-set-key (kbd "C-k c") 'kass/session-cd) ;; Trocar de sessão
-(global-set-key (kbd "<f5>") 'eval-buffer)      ;; Recarregar o arquivo atual
+(global-set-key (kbd "<f5>")  'eval-buffer)     ;; Recarregar o arquivo atual
 
 (add-hook 'focus-out-hook 'kass/-save-some-buffers)
 
