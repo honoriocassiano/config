@@ -36,7 +36,7 @@
 ;; adding characters. Use the up/down arrows to navigate and press RET to visit
 ;; the file under the cursor.  Any other key will abort the search.
 
-(defvar ifind-min-length 2
+(defvar ifind-min-length 1
   "Minimum length of the search string to trigger the shell command.")
 
 (defvar ifind-string ""
@@ -172,7 +172,10 @@
         (beginning-of-buffer)
         (message "Find files matching: %s" ifind-string))
 
-    (let ((dir-list (directory-files default-directory nil "[^.]+" t 10))) ;; Remove as pastas '.' '..' da busca
+    (let* ((files-and-dirs-attr (directory-files-and-attributes default-directory nil "[^.]+" t))
+	   (files-attr (seq-remove (lambda (d) (seq-elt d 1)) files-and-dirs-attr))
+	   (files (mapcar (lambda (d) (seq-elt d 0)) files-attr))
+	   (dir-list (take 10 files)))
       (insert (mapconcat 'identity dir-list "\n"))
       (beginning-of-buffer)
       (message "Find files matching: %s" ifind-string))
