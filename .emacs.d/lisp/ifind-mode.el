@@ -49,6 +49,7 @@
   "Name of the minor mode, if non-nil.")
 
 (setq ifind--go-back-window nil)
+(setq ifind--default-scroll-margin nil)
 
 (defconst ifind--buffer-name "*ifind*")
 
@@ -74,13 +75,16 @@
     (nconc minor-mode-alist
            (list '(ifind-mode ifind-mode))))
 
+
 (defun ifind-mode ()
   "Start Ifind minor mode."
   (interactive)
   (setq ifind-string ""
         ifind-mode " Ifind"
         overriding-terminal-local-map ifind-mode-map
-	ifind--go-back-window (selected-window))
+	ifind--go-back-window (selected-window)
+	ifind--default-scroll-margin scroll-margin)
+  (setq scroll-margin 0)
   (looking-at "")
   (force-mode-line-update)
   ;; Verificar se existe um modo melhor de fazer isso pq não é possível que não exista algo no Emacs que
@@ -138,7 +142,8 @@
 (defun ifind-exit ()
   "Exit Ifind minor mode."
   (setq ifind-mode nil
-        overriding-terminal-local-map nil)
+        overriding-terminal-local-map nil
+	scroll-margin ifind--default-scroll-margin)
   (force-mode-line-update)
   (setq ifind--go-back-window nil)
   (kill-buffer ifind--buffer-name))
@@ -163,22 +168,31 @@
   (switch-to-buffer ifind--buffer-name)
   (erase-buffer)
   (setq ifind--escaped-dirs (ifind--list-excluded-dirs))
-  (if (>= (length ifind-string) ifind-min-length)
-      (let ((dir-list (directory-files-recursively default-directory ifind-string nil 'ifind--should-enter-directory)))
-        (insert (mapconcat
-                 '(lambda (dir) (file-relative-name dir default-directory))
-                 dir-list
-                 "\n"))
-        (beginning-of-buffer)
-        (message "Find files matching: %s" ifind-string))
+  (let ((max-results (- (window-height nil 'floor) 2))) ;; TODO Verificar como funciona caso o valor seja exato
+    (if (>= (length ifind-string) ifind-min-length)
+	(let*
+	    ((all-files (directory-files-recursively default-directory ".*" nil 'ifind--should-enter-directory))
+	     (relative-files (mapcar '(lambda (d) (file-relative-name d default-directory)) all-files))
+	     (matcher (lambda (f) (not (string-match (regexp-quote ifind-string) f))))
+	     (matched-files (seq-remove matcher relative-files))
+	     (dir-list (take max-results matched-files)))
 
-    (let* ((files-and-dirs-attr (directory-files-and-attributes default-directory nil "[^.]+" t))
-	   (files-attr (seq-remove (lambda (d) (seq-elt d 1)) files-and-dirs-attr))
-	   (files (mapcar (lambda (d) (seq-elt d 0)) files-attr))
-	   (dir-list (take 10 files)))
-      (insert (mapconcat 'identity dir-list "\n"))
-      (beginning-of-buffer)
-      (message "Find files matching: %s" ifind-string))
-    ))
+	  ;; (let ((dir-list (directory-files-recursively default-directory ifind-string nil 'ifind--should-enter-directory)))
+	  (insert (mapconcat
+		   'identity
+		   dir-list
+		   "\n"))
+	  (beginning-of-buffer)
+	  (narrow-to-region (window-start) (point-max))
+	  (message "Find files matching: %s" ifind-string))
+
+      (let* ((files-and-dirs-attr (directory-files-and-attributes default-directory nil "[^.]+" t))
+	     (files-attr (seq-remove (lambda (d) (seq-elt d 1)) files-and-dirs-attr))
+	     (files (mapcar (lambda (d) (seq-elt d 0)) files-attr))
+	     (dir-list (take max-results files)))
+	(insert (mapconcat 'identity dir-list "\n"))
+	(beginning-of-buffer)
+	(message "Find files matching: %s" ifind-string))
+      )))
 
 (provide 'ifind-mode)
