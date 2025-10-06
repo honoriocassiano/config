@@ -20,8 +20,10 @@
 (require 'ifind-mode)
 (require 'writeroom-mode)
 (require 'simpc-mode)
+(require 'neotree)
 
 (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
+;; (add-to-list 'auto-mode-alist '("\\*NeoTree\\*" . neotree-mode))
 
 (fido-mode t)          ;; Autocomplete
 (fido-vertical-mode t) ;; Alternativas aparecem verticalment
@@ -104,6 +106,14 @@
   :config
   (setq dired-kill-when-opening-new-dired-buffer t))
 
+(use-package neotree
+  :config
+  (setq neo-theme 'arrow)
+  (setq neo-window-position 'right)
+  (setq neo-window-width 50))
+
+(global-set-key (kbd "<f6>") 'neotree-toggle)
+
 (use-package evil
   :config
   (setq evil-ex-search-case 'sensisite)
@@ -113,6 +123,9 @@
   (setq evil-split-window-below t)
   (setq evil-vsplit-window-right t)
   (setq evil-undo-system 'undo-redo)
+
+  (add-to-list 'evil-buffer-regexps '("\\*NeoTree\\*" . nil))
+  (add-to-list 'evil-buffer-regexps '("\\*ifind\\*" . nil))
 
   :custom
   (setq evil-emacs-state-modes '())
@@ -129,7 +142,8 @@
   (evil-set-initial-state 'magit-status-mode 'motion)
   (evil-set-initial-state 'magit-diff-mode 'motion)
   (evil-set-initial-state 'magit-stashes-mode 'motion)
-  (evil-set-initial-state 'epa-key-list-mode 'motion))
+  (evil-set-initial-state 'epa-key-list-mode 'motion)
+)
 
 (evil-mode 1)
 (evil-select-search-module 'evil-search-module 'evil-search)
@@ -144,7 +158,6 @@
 
 (global-set-key (kbd "S-<f9>") 'compile)    ;; Compila (sem precisar de sessão)
 (global-set-key (kbd "<f9>") 'kass/compile) ;; Compila
-(global-set-key (kbd "<f6>") 'dired)   ;; Abre um diretório
 
 ;; C-z é esquisito então eu desabilito no modo evil
 (define-key evil-insert-state-map   (kbd "C-z") nil)
