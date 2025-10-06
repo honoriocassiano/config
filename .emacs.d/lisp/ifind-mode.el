@@ -53,6 +53,9 @@
 
 (defconst ifind--buffer-name "*ifind*")
 
+(defun ifind--print-search ()
+  (message "Find files matching: %s" ifind-string))
+
 (defvar ifind-mode-map
   (let ((i ?\s)
         (map (make-keymap)))
@@ -60,8 +63,10 @@
     (while (< i 256)
       (define-key map (vector i) 'ifind-printing-char)
       (setq i (1+ i)))
-    (define-key map [up] 'previous-line)
-    (define-key map [down] 'next-line)
+    (define-key map [up] 'ifind--previous-line)
+    (define-key map [left] 'ifind--previous-line)
+    (define-key map [right] 'ifind--next-line)
+    (define-key map [down] 'ifind--next-line)
     (define-key map [return] 'ifind-visit-file)
     (define-key map (kbd "C-v") 'ifind-visit-file-split-vertically)
     (define-key map [backspace] 'ifind-del-char)
@@ -75,6 +80,18 @@
     (nconc minor-mode-alist
            (list '(ifind-mode ifind-mode))))
 
+(defun ifind--previous-line ()
+  (interactive)
+  (when (not (eq (line-number-at-pos) 1))
+    (previous-line))
+  (ifind--print-search))
+
+(defun ifind--next-line ()
+  (interactive)
+  (let ((last-line (count-lines (point-min) (point-max))))
+    (when (not (eq (line-number-at-pos) last-line))
+      (next-line)))
+  (ifind--print-search))
 
 (defun ifind-mode ()
   "Start Ifind minor mode."
@@ -135,9 +152,11 @@
 (defun ifind-del-char ()
   "Delete character from end of search string and search again."
   (interactive)
-  (when (> (length ifind-string) 0)
-    (setq ifind-string (substring ifind-string 0 -1))
-    (ifind-update)))
+  (if (> (length ifind-string) 0)
+      (progn
+	(setq ifind-string (substring ifind-string 0 -1))
+	(ifind-update))
+    (ifind--print-search)))
 
 (defun ifind-exit ()
   "Exit Ifind minor mode."
@@ -163,12 +182,15 @@
           (setq res t)))
       (not res)))
 
+(defun ifind--get-max-lines-buffer ()
+  (- (window-height nil 'floor) 2))
+
 (defun ifind-update ()
   "Display the current search string and search for files."
   (switch-to-buffer ifind--buffer-name)
   (erase-buffer)
   (setq ifind--escaped-dirs (ifind--list-excluded-dirs))
-  (let ((max-results (- (window-height nil 'floor) 2))) ;; TODO Verificar como funciona caso o valor seja exato
+  (let ((max-results (ifind--get-max-lines-buffer)))
     (if (>= (length ifind-string) ifind-min-length)
 	(let*
 	    ((all-files (directory-files-recursively default-directory ".*" nil 'ifind--should-enter-directory))
@@ -184,7 +206,7 @@
 		   "\n"))
 	  (beginning-of-buffer)
 	  (narrow-to-region (window-start) (point-max))
-	  (message "Find files matching: %s" ifind-string))
+	  (ifind--print-search))
 
       (let* ((files-and-dirs-attr (directory-files-and-attributes default-directory nil "[^.]+" t))
 	     (files-attr (seq-remove (lambda (d) (seq-elt d 1)) files-and-dirs-attr))
@@ -192,7 +214,7 @@
 	     (dir-list (take max-results files)))
 	(insert (mapconcat 'identity dir-list "\n"))
 	(beginning-of-buffer)
-	(message "Find files matching: %s" ifind-string))
+	(ifind--print-search))
       )))
 
 (provide 'ifind-mode)
