@@ -43,6 +43,7 @@
  display-line-numbers-width-start nil
  display-line-numbers-width 4 ;; Quantidade de dígitos reservados para os números das linhas
  truncate-lines t             ;; Não quebrar linhas por padrão
+ show-trailing-whitespace t
  )
 
 (setq
