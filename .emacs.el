@@ -357,6 +357,50 @@ TODO: Não funciona em todos os modos, principalmente quando utilizado no modo v
 (evil-define-key 'normal 'global (kbd "C-k q") 'kass/quote-current-word)
 (evil-define-key 'visual 'global (kbd "C-k q") 'kass/quote-current-region)
 
+;; **************************************************
+;; Trecho copiado de https://github.com/bling/evil-visualstar/blob/master/evil-visualstar.el
+;; **************************************************
+
+(defun begin-search-selection (beg end direction)
+  (when (evil-visual-state-p)
+	(evil-exit-visual-state)
+	(let ((found)
+		  (selection (regexp-quote (buffer-substring-no-properties beg end))))
+	  (if (eq evil-search-module 'isearch)
+		  (progn
+			(setq isearch-forward direction)
+			(setq found (evil-search selection direction t)))
+		(let ((pattern (evil-ex-make-search-pattern selection))
+			  (direction (if direction 'forward 'backward)))
+		  (setq evil-ex-search-direction direction)
+		  (setq evil-ex-search-pattern pattern)
+		  (evil-ex-search-activate-highlight pattern)
+		  ;; update search history unless this pattern equals the
+		  ;; previous pattern
+		  (unless (equal (car-safe evil-ex-search-history) selection)
+			(push selection evil-ex-search-history))
+		  (evil-push-search-history selection (eq direction 'forward))
+		  (setq found (evil-ex-search-next)))))))
+
+(evil-define-motion begin-search-selection-forward (beg end)
+  "Search for the visual selection forwards."
+  :jump t
+  :repeat nil
+  (interactive "<r>")
+  (begin-search-selection beg end t))
+
+(evil-define-motion begin-search-selection-backward (beg end)
+  "Search for the visual selection backwards."
+  :jump t
+  :repeat nil
+  (interactive "<r>")
+  (begin-search-selection beg end nil))
+
+(evil-define-key 'visual 'global (kbd "*") 'begin-search-selection-forward)
+(evil-define-key 'visual 'global (kbd "#") 'begin-search-selection-backward)
+
+;; **************************************************
+
 (global-set-key (kbd "C-k") nil)      ;; O comportamento padrão é chamar o "kill-line"
 
 (global-set-key (kbd "C-k p") 'kass/ifind)      ;; Encontrar arquivos do projeto
