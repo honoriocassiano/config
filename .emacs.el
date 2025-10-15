@@ -71,26 +71,26 @@
  split-width-threshold nil                 ;; ???
  )
 
-;; TODO Verificar se está configurado corretamente
-(add-to-list 'display-buffer-alist
-             '("\\*ifind\\*"
-               (display-buffer-in-side-window)
-               (side . bottom)
-               (slot . 0)
-               (window-height . 0.3)
-	       (dedicated . t)
-               (window-parameters
-                (no-delete-other-windows . nil))))
+;; ;; TODO Verificar se está configurado corretamente
+;; (add-to-list 'display-buffer-alist
+;;              '("\\*ifind\\*"
+;;                (display-buffer-in-side-window)
+;;                (side . bottom)
+;;                (slot . 0)
+;;                (window-height . 0.3)
+;; 	       (dedicated . t)
+;;                (window-parameters
+;;                 (no-delete-other-windows . nil))))
 
-(add-to-list 'display-buffer-alist
-             '("\\*\\([Hh]elp\\|Command History\\|command-log\\|Backtrace\\|Compile-log\\|Messages\\|Warnings\\|compilation\\)\\*"
-               (display-buffer-in-side-window)
-               (side . bottom)
-               (slot . 0)
-	       (dedicated . t)
-	       (window-height . 0.3)
-               (window-parameters
-                (no-delete-other-windows . nil))))
+;; (add-to-list 'display-buffer-alist
+;;              '("\\*\\([Hh]elp\\|Command History\\|command-log\\|Backtrace\\|Compile-log\\|Messages\\|Warnings\\|compilation\\)\\*"
+;;                (display-buffer-in-side-window)
+;;                (side . bottom)
+;;                (slot . 0)
+;; 	       (dedicated . t)
+;; 	       (window-height . 0.3)
+;;                (window-parameters
+;;                 (no-delete-other-windows . nil))))
 
 ;; UTF-8 em tudo
 (prefer-coding-system 'utf-8)
@@ -152,10 +152,23 @@
 (use-package helm
   :ensure t
   :config
+
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "C-x b") 'helm-buffers-list)
+  (setq helm-display-function 'pop-to-buffer)
+  (setq helm-split-window-in-side-p t)
   (helm-mode 1))
+
+(use-package shackle
+  :ensure t
+  :config
+  (setq shackle-default-rule '(:same t))
+  (setq shackle-rules '(("*ifind*" :size 0.2)
+			("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)))
+  (shackle-mode 1))
+
+
 
 (modify-syntax-entry ?_ "w")
 (add-hook 'c-mode-common-hook
