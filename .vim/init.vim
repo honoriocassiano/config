@@ -251,7 +251,7 @@ vnoremap <Leader>q mu<Esc>`>a”<Esc>`<i“<Esc>`u
 
 xnoremap p pgvy
 
-nnoremap <Leader>s :vsplit $NVIMRC
+nnoremap <Leader>s :vsplit ~/.vim/init.vim
 " TODO Verificar se isso funciona no Windows
 " nnoremap <Leader>s :exe "vsplit ".stdpath('config').'/init.vim'
 " nnoremap <Leader>w :w<CR>
