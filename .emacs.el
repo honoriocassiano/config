@@ -25,8 +25,8 @@
 (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
 ;; (add-to-list 'auto-mode-alist '("\\*NeoTree\\*" . neotree-mode))
 
-(fido-mode t)          ;; Autocomplete
-(fido-vertical-mode t) ;; Alternativas aparecem verticalment
+;; (fido-mode t)          ;; Autocomplete
+;; (fido-vertical-mode t) ;; Alternativas aparecem verticalment
 (menu-bar-mode -1)     ;; Remove a barra de menu
 (tool-bar-mode -1)     ;; Remove a barra de ferramentas
 (scroll-bar-mode -1)   ;; Remove a barra de rolagem
@@ -148,6 +148,14 @@
 
 (evil-mode 1)
 (evil-select-search-module 'evil-search-module 'evil-search)
+
+(use-package helm
+  :ensure t
+  :config
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x b") 'helm-buffers-list)
+  (helm-mode 1))
 
 (modify-syntax-entry ?_ "w")
 (add-hook 'c-mode-common-hook
