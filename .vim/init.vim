@@ -502,7 +502,7 @@ nnoremap <A-4> 4gt
 nnoremap <A-5> 5gt
 nnoremap <A-6> 6gt
 nnoremap <A-7> 7gt
-nnoremap <A-6> 6gt
+nnoremap <A-8> 8gt
 
 inoremap <A-1> <esc>1gt
 inoremap <A-2> <esc>2gt
@@ -512,7 +512,7 @@ inoremap <A-4> <esc>4gt
 inoremap <A-5> <esc>5gt
 inoremap <A-6> <esc>6gt
 inoremap <A-7> <esc>7gt
-inoremap <A-6> <esc>6gt
+inoremap <A-8> <esc>8gt
 
 vnoremap <A-1> 1gt
 vnoremap <A-2> 2gt
@@ -522,7 +522,17 @@ vnoremap <A-4> 4gt
 vnoremap <A-5> 5gt
 vnoremap <A-6> 6gt
 vnoremap <A-7> 7gt
-vnoremap <A-6> 6gt
+vnoremap <A-8> 8gt
+
+tnoremap <A-1> <C-\><C-n>1gt
+tnoremap <A-2> <C-\><C-n>2gt
+tnoremap <A-2> <C-\><C-n>2gt
+tnoremap <A-3> <C-\><C-n>3gt
+tnoremap <A-4> <C-\><C-n>4gt
+tnoremap <A-5> <C-\><C-n>5gt
+tnoremap <A-6> <C-\><C-n>6gt
+tnoremap <A-7> <C-\><C-n>7gt
+tnoremap <A-8> <C-\><C-n>8gt
 
 " No continuation comment on new line
 autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
