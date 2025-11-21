@@ -39,7 +39,7 @@
 
 
 (setq-default
- ;; indent-tabs-mode nil         ;; Alguma coisa relativa a tabs vs espaços
+ indent-tabs-mode nil         ;; Evita a inserção de TAB quando deveriam ser 8 espaços
  display-line-numbers-width-start nil
  display-line-numbers-width 4 ;; Quantidade de dígitos reservados para os números das linhas
  truncate-lines t             ;; Não quebrar linhas por padrão
