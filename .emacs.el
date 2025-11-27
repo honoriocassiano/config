@@ -123,7 +123,7 @@
   (setq evil-kill-on-visual-paste nil)
   (setq evil-split-window-below t)
   (setq evil-vsplit-window-right t)
-  (setq evil-undo-system 'undo-redo)
+  (evil-set-undo-system 'undo-redo)
 
   (add-to-list 'evil-buffer-regexps '("\\*NeoTree\\*" . nil))
   (add-to-list 'evil-buffer-regexps '("\\*ifind\\*" . nil))
