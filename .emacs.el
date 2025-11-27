@@ -149,23 +149,25 @@
 (evil-mode 1)
 (evil-select-search-module 'evil-search-module 'evil-search)
 
-(use-package helm
-  :ensure t
-  :config
+;; (use-package helm
+;;   :ensure t
+;;   :config
 
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-x b") 'helm-buffers-list)
-  (setq helm-display-function 'pop-to-buffer)
-  (setq helm-split-window-in-side-p t)
-  (helm-mode 1))
+;;   (global-set-key (kbd "M-x") 'helm-M-x)
+;;   (global-set-key (kbd "C-x C-f") 'helm-find-files)
+;;   (global-set-key (kbd "C-x b") 'helm-buffers-list)
+;;   (setq helm-display-function 'pop-to-buffer)
+;;   (setq helm-split-window-in-side-p t)
+;;   (helm-mode 1))
 
 (use-package shackle
   :ensure t
   :config
   (setq shackle-default-rule '(:same t))
-  (setq shackle-rules '(("*ifind*" :size 0.2)
-			("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)))
+
+  (setq shackle-rules '(("*ifind*" :size 0.2 :noselect t)
+                        ;; (compilation-mode :noselect t)
+                        ("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)))
   (shackle-mode 1))
 
 
