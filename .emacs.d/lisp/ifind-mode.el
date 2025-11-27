@@ -165,7 +165,9 @@
 	scroll-margin ifind--default-scroll-margin)
   (force-mode-line-update)
   (setq ifind--go-back-window nil)
-  (kill-buffer ifind--buffer-name))
+  (delete-window)
+  (kill-buffer ifind--buffer-name)
+)
 
 (defun ifind-format-command (dir excluded-dirs str)
   (format ifind-command dir excluded-dirs str dir))
