@@ -241,7 +241,7 @@ augroup end
 autocmd! User GoyoEnter nested call <SID>ActivateWrap()
 autocmd! User GoyoLeave nested call <SID>DeactivateWrap()
 
-autocmd! VimLeavePre * :Goyo!
+autocmd! VimLeavePre * :Goyo! | cclose
 
 " ----------------------------------------------------------------------------------
 " Shortcuts
