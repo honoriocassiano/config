@@ -219,6 +219,22 @@ let g:dispatch_no_maps = 1
 nmap <F9> :silent wa<cr>:Dispatch <up>
 imap <F9> <Esc>:silent wa<cr>:Dispatch <up>
 
+function QuickfixGoToFile()
+    let seila = expand("<cWORD>")
+
+    let [all, file, line, column; _] = matchlist(seila, '\(\f\+\)\%(:\(\d\+\)\)\?\%(:\(\d\+\)\)\?')
+
+    :exe "normal \<C-w>p"
+    :exe "e " . file . "|" . line
+    :exe "call cursor(" . line . "," . column . ")"
+endfunction
+
+augroup quickfix
+    au!
+    au FileType qf nnoremap gf :call QuickfixGoToFile()<cr>
+    au FileType qf nnoremap gF :call QuickfixGoToFile()<cr>
+augroup end
+
 " ----------------------------------------------------------------------------------
 " Goyo
 " ----------------------------------------------------------------------------------
