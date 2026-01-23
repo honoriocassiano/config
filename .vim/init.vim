@@ -216,8 +216,8 @@ let NERDTreeQuitOnOpen=1
 " ----------------------------------------------------------------------------------
 let g:dispatch_no_maps = 1
 
-nmap <F9> :wa <bar> Dispatch<cr>
-imap <F9> <Esc>:wa <bar> Dispatch<cr>
+nmap <F9> :silent wa<cr>:Dispatch <up>
+imap <F9> <Esc>:silent wa<cr>:Dispatch <up>
 
 " ----------------------------------------------------------------------------------
 " Goyo
@@ -226,7 +226,6 @@ autocmd! User GoyoEnter nested call <SID>ActivateWrap()
 autocmd! User GoyoLeave nested call <SID>DeactivateWrap()
 
 autocmd! VimLeavePre * :Goyo!
-
 
 " ----------------------------------------------------------------------------------
 " Shortcuts
