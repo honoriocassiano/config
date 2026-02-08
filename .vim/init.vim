@@ -312,6 +312,17 @@ inoremap <c-w> <c-g>u<c-w>
 
 inoremap <C-CR> <Esc>O
 
+inoremap <F11> :call ToggleFullScreen()<cr>
+nnoremap <F11> :call ToggleFullScreen()<cr>
+function ToggleFullScreen()
+
+    if g:GuiWindowFullScreen
+        :call GuiWindowFullScreen(0)
+    else
+        :call GuiWindowFullScreen(1)
+    endif
+endfunction
+
 " inoremap <C-d> <Esc>m`yyp``<Down>a
 " nnoremap <C-d> m`yyp``<Down>
 
