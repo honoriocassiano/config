@@ -233,6 +233,8 @@ augroup quickfix
     au!
     au FileType qf nnoremap gf :call QuickfixGoToFile()<cr>
     au FileType qf nnoremap gF :call QuickfixGoToFile()<cr>
+
+    au FileType qf nnoremap q :silent! cclose<cr>
 augroup end
 
 " ----------------------------------------------------------------------------------
