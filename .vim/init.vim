@@ -231,10 +231,10 @@ endfunction
 
 augroup quickfix
     au!
-    au FileType qf nnoremap gf :call QuickfixGoToFile()<cr>
-    au FileType qf nnoremap gF :call QuickfixGoToFile()<cr>
+    au FileType qf nnoremap <buffer> gf :call QuickfixGoToFile()<cr>
+    au FileType qf nnoremap <buffer> gF :call QuickfixGoToFile()<cr>
 
-    au FileType qf nnoremap q :silent! cclose<cr>
+    au FileType qf nnoremap <buffer> q :silent! cclose<cr>
 augroup end
 
 " ----------------------------------------------------------------------------------
@@ -568,8 +568,8 @@ autocmd BufNew,BufNewFile,BufRead * let b:cass_wrap_mode=0
 
 augroup vim
     au!
-    au FileType vim inoremap <F5> <esc>:So<cr>
-    au FileType vim nnoremap <F5> :So<cr>
+    au FileType vim inoremap <buffer> <F5> <esc>:So<cr>
+    au FileType vim nnoremap <buffer> <F5> :So<cr>
 augroup end
 
 nmap <F1> q:
