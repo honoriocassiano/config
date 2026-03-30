@@ -715,6 +715,46 @@ nnoremap <Leader>j :call GotoJump()<CR>
 
 set clipboard+=unnamedplus
 
+
+" ----------------------------------------------------------------------------------
+" Lista de TODOs
+" ----------------------------------------------------------------------------------
+set tags=./tags;,tags;./todotags;,todotags
+
+inoremap <Leader>t <Esc>:call TodoCreate()<cr>
+nnoremap <Leader>t :call TodoCreate()<cr>
+
+function! TodoCreate()
+    let name = strftime("%Y%m%d_%H%M%S")
+    let filename = $"todos/{name}.todo"
+
+    exe $"normal! OTODO({name})\<Esc>\<Cmd>TComment\<cr>"
+    exe "silent !mkdir todos"
+
+    let line = name . " TODO "
+
+    call writefile([line], filename)
+    call TodoCreateTags()
+    exe $"e +call\\ cursor(1,{len(line)}) {filename}"
+endfunction
+
+function! TodoCreateTags()
+    let file_list = globpath("./todos/", "*.todo", 0, 1)
+
+    if !empty(file_list)
+        let lines = map(file_list, {_, tf -> substitute(tf, '.*\(\d\{8\}_\d\{6\}\).todo', '\1', "") .. "\t" .. tf .. "\t1"})
+
+        call writefile(lines, "todotags")
+    endif
+endfunction
+
+augroup todotag
+    au!
+    au BufNew,BufNewFile,BufRead todotags set filetype=tags
+    au BufRead                   todotags set filetype=tags
+    " au BufLeave,BufHidden        todotags :call TodoCreateTags()
+augroup end
+
 " ----------------------------------------------------------------------------------
 " Não-funções uteis
 " ----------------------------------------------------------------------------------
