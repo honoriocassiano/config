@@ -24,6 +24,7 @@ Plugin 'Asheq/close-buffers.vim'
 Plugin 'soramugi/auto-ctags.vim'
 Plugin 'preservim/tagbar'
 Plugin 'junegunn/goyo.vim'
+Plugin 'mg979/vim-visual-multi'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -721,7 +722,7 @@ set clipboard+=unnamedplus
 " ----------------------------------------------------------------------------------
 set tags=./tags;,tags;./todotags;,todotags
 
-inoremap <Leader>t <Esc>:call TodoCreate()<cr>
+command Todo call TodoCreate()
 nnoremap <Leader>t :call TodoCreate()<cr>
 
 function! TodoCreate()
@@ -746,6 +747,35 @@ function! TodoCreateTags()
 
         call writefile(lines, "todotags")
     endif
+endfunction
+
+function! TodoReadFirstLine(filename)
+    let lines = readfile(a:filename, '', 1)
+
+    if (len(lines) > 0)
+        return substitute(lines[0], '\d\{8\}_\d\{6\} \(.\+\)', '\1', "")
+        " return "abcde"
+    else
+        return "<vazio>"
+    endif
+endfunction
+
+command TodoList call TodoListTodos()
+function! TodoListTodos()
+    let file_list = globpath("./todos/", "*.todo", 0, 1)
+
+    let qf_list = map(file_list, {
+    \     _, f -> {
+    \         'filename': f,
+    \         'module': substitute(f, '.*\(\d\{8\}_\d\{6\}\).todo', '\1', ""),
+    \         'lnum': 1,
+    \         'col': 1,
+    \         'text': TodoReadFirstLine(f),
+    \     }
+    \ })
+
+    call setqflist([], "r", {'title': 'Lista de TODOs', 'items': qf_list})
+    botright copen
 endfunction
 
 augroup todotag
