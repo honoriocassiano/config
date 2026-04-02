@@ -74,7 +74,6 @@ colorscheme white
 " Show useless whitespaces
 let c_space_errors=1
 
-set guifont=Iosevka\ Custom\ Semi-Extended:h13
 
 set linespace=0
 
@@ -673,10 +672,19 @@ set title
 " ----------------------------------------------------------------------------------
 " Aumentar e diminuir fonte
 " ----------------------------------------------------------------------------------
-let s:font_size = 12
+let s:font_size = 14
 let s:font_name = 'Iosevka\ Custom\ Semi-Extended'
 
-exe 'set guifont=' . s:font_name . ':h' . s:font_size 
+let s:guifont = $"{s:font_name}:h{s:font_size}"
+
+function! SetIntialFontSize()
+    if !exists("s:guifont")
+        exe 'set guifont=' . s:guifont
+    endif
+endfunction
+
+call SetIntialFontSize()
+
 " set guifont=Fira\ Mono:h11
 " set guifont=Fira\ Code:h10
 " set guifont=Monolisa:h9
