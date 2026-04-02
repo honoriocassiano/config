@@ -764,15 +764,13 @@ command TodoList call TodoListTodos()
 function! TodoListTodos()
     let file_list = globpath("./todos/", "*.todo", 0, 1)
 
-    let qf_list = map(file_list, {
-    \     _, f -> {
-    \         'filename': f,
-    \         'module': substitute(f, '.*\(\d\{8\}_\d\{6\}\).todo', '\1', ""),
-    \         'lnum': 1,
-    \         'col': 1,
-    \         'text': TodoReadFirstLine(f),
-    \     }
-    \ })
+    let qf_list = map(file_list, {_, f -> {
+    \     'filename': f,
+    \     'module': substitute(f, '.*\(\d\{8\}_\d\{6\}\).todo', '\1', ""),
+    \     'lnum': 1,
+    \     'col': 1,
+    \     'text': TodoReadFirstLine(f),
+    \ }})
 
     call setqflist([], "r", {'title': 'Lista de TODOs', 'items': qf_list})
     botright copen
