@@ -107,7 +107,7 @@ function SessionCd(path)
     let criado=0
 
     if !isdirectory(a:path)
-        call mkdir(a:path)
+        call mkdir(a:path, "p")
         let criado=1
     endif
     exe 'cd ' . a:path
