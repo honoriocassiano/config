@@ -104,9 +104,19 @@ endfunction
 command -nargs=1 -complete=dir SessionCd call SessionCd(<q-args>)
 function SessionCd(path)
     let seila=string(a:path)
+    let criado=0
+
+    if !isdirectory(a:path)
+        call mkdir(a:path)
+        let criado=1
+    endif
     exe 'cd ' . a:path
     call SessionRestore()
     normal! :CtrlPDir :pwd<ESC>
+
+    if criado
+        exe $"echo 'Diretório criado: {a:path}'"
+    endif
 endfunction
 
 " Autocommands
