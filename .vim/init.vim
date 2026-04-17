@@ -88,7 +88,10 @@ set listchars=tab:▶\ ,trail:¶
 " Salva a porra (quase) toda na sessão
 set sessionoptions=blank,buffers,curdir,folds,help,tabpages,winsize
 fu! SessionSave()
-    execute 'mksession! ' . getcwd() . '/.session.vim'
+" TODO Pode haver um bug caso a pasta seja alterada no meio da sessão
+    if exists('g:session_started') && g:session_started
+        exe 'mksession! ' . getcwd() . '/.session.vim'
+    endif
 endfunction
 
 fu! SessionRestore()
@@ -117,6 +120,7 @@ function SessionCd(path)
     if criado
         exe $"echo 'Diretório criado: {a:path}'"
     endif
+    let g:session_started=1
 endfunction
 
 " Autocommands
