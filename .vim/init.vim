@@ -631,6 +631,19 @@ set foldlevel=2
 " set virtualedit=all
 " set signcolumn=yes
 
+
+" ----------------------------------------------------------------------------------
+" Scratch buffer
+" ----------------------------------------------------------------------------------
+command Scratch call Scratch()
+function! Scratch()
+    if bufname() != ""
+        exe '$tabnew +set\ bt=nofile\ ft=scratch'
+    else
+        exe 'set bt=nofile ft=scratch'
+    endif
+endfunction
+
 " ----------------------------------------------------------------------------------
 " User Command mode
 " ----------------------------------------------------------------------------------
