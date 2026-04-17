@@ -437,6 +437,7 @@ endfunction
 let s:patterns = {
                 \'cpp': 'h c cpp hpp',
                 \'c': 'h c',
+                \'md': 'md pmd',
                 \}
 
 function! s:ExpandFilePattern(extensions)
