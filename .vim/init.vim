@@ -61,6 +61,9 @@ set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 
+" Tamanho da linha para formatação de parágrafos
+set textwidth=70
+
 " Open tabs on the right
 set splitright
 
@@ -267,6 +270,9 @@ map <Space> <Leader>
 
 nnoremap \ ^
 vnoremap \ ^
+
+nnoremap <Leader>f gqq
+vnoremap <Leader>f gq
 
 nnoremap <Leader>p "+p
 nnoremap <Leader>P "+P
