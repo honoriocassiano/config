@@ -24,7 +24,6 @@ Plugin 'Asheq/close-buffers.vim'
 Plugin 'soramugi/auto-ctags.vim'
 Plugin 'preservim/tagbar'
 Plugin 'junegunn/goyo.vim'
-Plugin 'mg979/vim-visual-multi'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
