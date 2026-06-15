@@ -72,6 +72,7 @@ set undofile
 " Theme
 " colorscheme default
 colorscheme white
+set tags=./tags;,tags;./todotags;,todotags;
 
 " Show useless whitespaces
 let c_space_errors=1
@@ -86,6 +87,8 @@ set sidescroll=3
 " Show trailing characters
 set list
 set listchars=tab:▶\ ,trail:¶
+
+set nofoldenable
 
 " Salva a porra (quase) toda na sessão
 set sessionoptions=blank,buffers,curdir,folds,help,tabpages,winsize
@@ -247,10 +250,10 @@ endfunction
 
 augroup quickfix
     au!
-    au FileType qf nnoremap <buffer> gf :call QuickfixGoToFile()<cr>
-    au FileType qf nnoremap <buffer> gF :call QuickfixGoToFile()<cr>
+    autocmd BufWinEnter quickfix nnoremap gf :call QuickfixGoToFile()<cr>
+    autocmd BufWinEnter quickfix nnoremap gF :call QuickfixGoToFile()<cr>
 
-    au FileType qf nnoremap <buffer> q :silent! cclose<cr>
+    autocmd BufWinEnter quickfix nnoremap q :silent! cclose<cr>
 augroup end
 
 " ----------------------------------------------------------------------------------
@@ -288,6 +291,14 @@ vnoremap <Leader>q mu<Esc>`>a”<Esc>`<i“<Esc>`u
 xnoremap p pgvy
 
 nnoremap <Leader>s :vsplit ~/.vim/init.vim
+
+augroup cmdwindow
+    au!
+    au CmdwinEnter * nnoremap <buffer> <nowait> <C-g> <Cmd>quit<CR>
+    au CmdwinEnter * vnoremap <buffer> <nowait> <C-g> <Cmd>quit<CR>
+    au CmdwinEnter * inoremap <buffer> <nowait> <C-g> <Esc><Cmd>quit<CR>
+augroup end
+
 " TODO Verificar se isso funciona no Windows
 " nnoremap <Leader>s :exe "vsplit ".stdpath('config').'/init.vim'
 " nnoremap <Leader>w :w<CR>
@@ -651,6 +662,24 @@ function! Scratch()
     else
         exe 'set bt=nofile ft=scratch'
     endif
+endfunction
+
+" ----------------------------------------------------------------------------------
+" Todo Tags
+" ----------------------------------------------------------------------------------
+function! GenerateTodoTags()
+" TODO usar pwd
+    let todo_files = globpath("./todos/", "*.todo", 0, 1)
+
+    let lines = map(todo_files, {_, tf -> substitute(tf, '.*\/\(\d\{8\}_\d\{6\}\).todo', '\1', "") .. "\t" .. tf .. "\t1" })
+
+    " echo lines
+
+    call writefile(lines, "todotags")
+
+    " for tf in todo_files
+    "     echo tf
+    " endfor
 endfunction
 
 " ----------------------------------------------------------------------------------
