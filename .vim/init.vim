@@ -754,8 +754,11 @@ call SetIntialFontSize()
 " set guifont=Monolisa:h9
 
 function! AdjustFontSize(amount)
-  let s:font_size = s:font_size+a:amount
-  :execute "GuiFont! " . s:font_name . ":h" . s:font_size
+  let s:font_size = s:font_size + a:amount
+
+  let s:guifont = $"{s:font_name}:h{s:font_size}"
+
+  execute $"set guifont={s:guifont}"
 endfunction
 
 noremap <C-ScrollWheelUp> :call AdjustFontSize(1)<CR>
@@ -765,7 +768,7 @@ inoremap <C-ScrollWheelDown> <Esc>:call AdjustFontSize(-1)<CR>a
 
 noremap <c-PageUp> :call AdjustFontSize(1)<CR>
 noremap <c-PageDown> :call AdjustFontSize(-1)<CR>
-inoremap <C-PageUo> <Esc>:call AdjustFontSize(1)<CR>a
+inoremap <C-PageUp> <Esc>:call AdjustFontSize(1)<CR>a
 inoremap <C-PageDown> <Esc>:call AdjustFontSize(-1)<CR>a
 
 " ----------------------------------------------------------------------------------
