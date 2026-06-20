@@ -614,7 +614,17 @@ nmap <Esc> :
 
 " cnoremap s/ %smagic/
 
-nnoremap <F2> :silent !explorer.exe .<cr>
+function! OpenFileExplorer()
+    let current_folder = getcwd()
+
+    if has("unix")
+        execute $"silent !xdg-open {current_folder}"
+    elseif has("win32")
+        execute $"silent !explorer.exe {current_folder}"
+    endif
+endfunction
+
+nnoremap <F2> :call OpenFileExplorer()<cr>
 " match TrailingSpaceChar /\s\+$/
 " match TabChar /\t\+/
 "
