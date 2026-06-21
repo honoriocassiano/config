@@ -38,8 +38,8 @@ autocmd VimEnter * exe 'tabdo windo clearjumps | tabnext'
 " VIM Editor settings
 " ----------------------------------------------------------------------------------
 " Config line numbers
-set number
-set relativenumber
+" set number
+" set relativenumber
 
 " set mouse=a
 set inccommand=nosplit
