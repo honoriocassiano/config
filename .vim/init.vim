@@ -267,6 +267,23 @@ autocmd! User GoyoLeave nested call <SID>DeactivateWrap()
 autocmd! VimLeavePre * :Goyo! | cclose
 
 " ----------------------------------------------------------------------------------
+" Templates/Skeletons
+" ----------------------------------------------------------------------------------
+function FindTemplate(args)
+    let filename = expand("%")
+    let template_filename = $'{$HOME}/.vim/templates/{filename}'
+
+    if filereadable(template_filename)
+        exe $"0r {template_filename}"
+    endif
+endfunction
+
+augroup templates
+    au!
+    autocmd BufNewFile *.* :call FindTemplate(deepcopy(v:event))
+augroup and
+
+" ----------------------------------------------------------------------------------
 " Shortcuts
 " ----------------------------------------------------------------------------------
 " Useful shortcuts
