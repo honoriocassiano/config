@@ -153,7 +153,8 @@ augroup cpp
     au FileType cpp imap <F12> =nullptr)<c-o>F=
     au FileType cpp nmap <F12> a=nullptr)<c-o>F=
 
-    au FileType cpp syn keyword cppStorageClass internal static_global static_local
+    au FileType cpp syn keyword cppStorageClass internal static_global static_local defer in out
+    au FileType cpp syn keyword cTodo NOTE PERF
 augroup end
 
 augroup web
