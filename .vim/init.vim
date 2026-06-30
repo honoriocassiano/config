@@ -255,7 +255,7 @@ augroup quickfix
     autocmd BufWinEnter quickfix nnoremap gf :call QuickfixGoToFile()<cr>
     autocmd BufWinEnter quickfix nnoremap gF :call QuickfixGoToFile()<cr>
 
-    autocmd BufWinEnter quickfix nnoremap q :silent! cclose<cr>
+    autocmd BufWinEnter quickfix nnoremap <buffer> q :silent! cclose<cr>
 augroup end
 
 " ----------------------------------------------------------------------------------
